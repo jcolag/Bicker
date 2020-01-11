@@ -1,0 +1,15 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  message: one
+  parent: one
+  next: one
+  user: one
+  content: MyText
+
+two:
+  message: two
+  parent: two
+  next: two
+  user: two
+  content: MyText
