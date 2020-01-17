@@ -15,10 +15,10 @@ ActiveRecord::Schema.define(version: 2020_01_11_221034) do
   create_table "categories", force: :cascade do |t|
     t.string "name", null: false
     t.string "of", default: "message"
-    t.integer "parent_id", null: false
+    t.integer "category_id"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
-    t.index ["parent_id"], name: "index_categories_on_parent_id"
+    t.index ["category_id"], name: "index_categories_on_category_id"
   end
 
   create_table "events", force: :cascade do |t|
@@ -35,18 +35,16 @@ ActiveRecord::Schema.define(version: 2020_01_11_221034) do
     t.integer "version", default: 1
     t.integer "category_id", null: false
     t.integer "user_id", null: false
-    t.integer "paragraph_id", null: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.index ["category_id"], name: "index_messages_on_category_id"
-    t.index ["paragraph_id"], name: "index_messages_on_paragraph_id"
     t.index ["user_id"], name: "index_messages_on_user_id"
   end
 
   create_table "paragraphs", force: :cascade do |t|
     t.integer "message_id", null: false
-    t.integer "parent_id", null: false
-    t.integer "next_id", null: false
+    t.integer "parent_id"
+    t.integer "next_id"
     t.integer "user_id", null: false
     t.text "content"
     t.datetime "created_at", precision: 6, null: false
@@ -66,15 +64,6 @@ ActiveRecord::Schema.define(version: 2020_01_11_221034) do
     t.index ["name", "resource_type", "resource_id"], name: "index_roles_on_name_and_resource_type_and_resource_id"
     t.index ["name"], name: "index_roles_on_name"
     t.index ["resource_type", "resource_id"], name: "index_roles_on_resource_type_and_resource_id"
-  end
-
-  create_table "sessions", force: :cascade do |t|
-    t.integer "session_id"
-    t.text "data"
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
-    t.index ["id"], name: "index_sessions_on_id", unique: true
-    t.index ["updated_at"], name: "index_sessions_on_updated_at"
   end
 
   create_table "tags", force: :cascade do |t|
@@ -108,15 +97,14 @@ ActiveRecord::Schema.define(version: 2020_01_11_221034) do
     t.index ["user_id"], name: "index_users_roles_on_user_id"
   end
 
-  add_foreign_key "categories", "parents"
+  add_foreign_key "categories", "categories"
   add_foreign_key "events", "messages"
   add_foreign_key "events", "users"
   add_foreign_key "messages", "categories"
-  add_foreign_key "messages", "paragraphs"
   add_foreign_key "messages", "users"
   add_foreign_key "paragraphs", "messages"
-  add_foreign_key "paragraphs", "nexts"
-  add_foreign_key "paragraphs", "parents"
+  add_foreign_key "paragraphs", "paragraphs", column: "next_id"
+  add_foreign_key "paragraphs", "paragraphs", column: "parent_id"
   add_foreign_key "paragraphs", "users"
   add_foreign_key "tags", "paragraphs"
   add_foreign_key "tags", "users"

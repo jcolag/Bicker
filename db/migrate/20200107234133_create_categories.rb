@@ -3,7 +3,7 @@ class CreateCategories < ActiveRecord::Migration[6.0]
     create_table :categories do |t|
       t.string :name, { :null => false }
       t.string :of, { :default => 'message' }
-      t.references :parent, null: false, foreign_key: true
+      t.references :category, foreign_key: true
 
       t.timestamps
     end
