@@ -13,6 +13,13 @@
   <% end %>
 
   <div class="field">
+    <div class="form-group col-md-4">
+      <%= f.label :login %><br />
+      <%= f.text_field :login, autofocus: true, class: "form-control" %>
+    </div>
+  </div>
+
+  <div class="field">
     <%= f.label :password %> <i>(leave blank if you don't want to change it)</i><br />
     <%= f.password_field :password, autocomplete: "new-password" %>
     <% if @minimum_password_length %>

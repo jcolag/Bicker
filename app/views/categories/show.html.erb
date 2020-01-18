@@ -1,0 +1,21 @@
+<p id="notice"><%= notice %></p>
+
+<table>
+  <tr>
+    <th>Name</th>
+    <td><%= @category.name %></td>
+  </tr>
+  <tr>
+    <th>Type</th>
+    <td><%= @category.of %></td>
+  <tr>
+  <% if !@category.category_id.nil? %>
+    <tr>
+      <th>Parent</th>
+      <td><%= link_to '->', '/categories/' + @category %></td>
+    </tr>
+  <% end %>
+</table>
+
+<%= link_to 'Edit', edit_category_path(@category) %> |
+<%= link_to 'Back', categories_path %>

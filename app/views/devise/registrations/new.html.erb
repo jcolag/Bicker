@@ -9,6 +9,13 @@
   </div>
 
   <div class="field">
+    <div class="form-group col-md-4">
+	  <%= f.label :login %><br />
+  	<%= f.text_field :login, autofocus: true, class: "form-control" %>
+    </div>
+  </div>
+
+  <div class="field">
     <%= f.label :password %>
     <% if @minimum_password_length %>
     <em>(<%= @minimum_password_length %> characters minimum)</em>

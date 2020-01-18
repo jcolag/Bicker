@@ -1,0 +1,24 @@
+<%= form_with(model: category, local: true) do |form| %>
+  <% if category.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(category.errors.count, "error") %> prohibited this category from being saved:</h2>
+
+      <ul>
+        <% category.errors.full_messages.each do |message| %>
+          <li><%= message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <label for="name"><b>Category Name:</b></label>
+  <%= text_field 'category', 'name', :value => @name %><br>
+  <label for="of"><b>Category Type:</b></label>
+  <%= select 'category', 'of', [ 'message', 'category' ] %><br>
+  <label for="category_id"><b>Parent:</b></label>
+  <%= select 'category', 'category_id', Category.all.collect { |p| [ p.name, p.id ]}, :include_blank => true %><br>
+
+  <div class="actions">
+    <%= form.submit %>
+  </div>
+<% end %>

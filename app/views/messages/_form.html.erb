@@ -1,0 +1,36 @@
+<%= form_with(model: message, local: true) do |form| %>
+  <% if message.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(message.errors.count, "error") %> prohibited this message from being saved:</h2>
+
+      <ul>
+        <% message.errors.full_messages.each do |message| %>
+          <li><%= message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <label for="subject"><font size="1"><b>Subject:</b></font></label>
+  <%= text_field 'message', 'subject', :value => @subject %><br>
+  <% if message.id.nil? %>
+    <%= text_area 'message', 'content', :value => @content, :cols => 80, :rows => 25 %><br>
+  <% else %>
+    <p>
+      Because the structure of your original post is used as
+      the structure for the conversation, you may not rewrite
+      the post.  Instead, you can modify a paragraph that has
+      not yet been replied to or&mdash;preferably&mdash; you
+      can reply to your original message explaining the
+      correction.
+    </p>
+  <% end %>
+  <%= hidden_field 'message', 'version', :value => @version || 1 %>
+  <%= hidden_field 'message', 'user_id', :value => warden.user.id %>
+  <label for="category_id"><b>Category:</b></label>
+  <%= select 'message', 'category_id', Category.all.collect { |p| [ p.name, p.id ] } %><br>
+
+  <div class="actions">
+    <%= form.submit %>
+  </div>
+<% end %>
