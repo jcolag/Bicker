@@ -1,3 +1,6 @@
+require 'redcarpet'
+require 'rubypants'
+
 class MessagesController < ApplicationController
   before_action :authenticate_user!, except: [:index, :show]
   before_action :set_message, only: [:show, :edit, :update, :destroy]
@@ -11,6 +14,24 @@ class MessagesController < ApplicationController
   # GET /messages/1
   # GET /messages/1.json
   def show
+    mark = Redcarpet::Markdown.new(Redcarpet::Render::HTML, extensions = {})
+    paragraphs = Paragraph.select { |p|
+      p.message_id == @message.id && p.parent_id.nil?
+    }
+    last = paragraphs.select { |p| p.parent_id.nil? &&  p.next_id.nil? }
+    lastp = last.first
+    lastp.content = mark.render RubyPants.new(CGI::escapeHTML(lastp.content)).to_html
+    plist = Array.new(1, lastp)
+    paragraphs.delete lastp
+    while paragraphs.count > 0 do
+      nextl = paragraphs.select { |p| p.next_id == lastp.id }
+      nextp = nextl.first
+      nextp.content = mark.render RubyPants.new(CGI::escapeHTML(nextp.content)).to_html
+      paragraphs.delete nextp
+      plist.push nextp
+      lastp = nextp
+    end
+    @paragraphs = plist.reverse
   end
 
   # GET /messages/new

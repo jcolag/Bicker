@@ -34,3 +34,18 @@
     <%= form.submit %>
   </div>
 <% end %>
+
+<script>
+var simplemde = new SimpleMDE({
+  placeholder: "Type here, using Markdown (not HTML) for formatting...",
+  showIcons: [
+    "clean-block",
+    "code",
+    "heading-2",
+    "heading-3",
+    "horizontal-rule",
+    "strikethrough",
+    "table"
+  ],
+});
+</script>

@@ -1,5 +1,6 @@
-<h1>Editing Message</h1>
+<h1>Editing <%= @message.subject %></h1>
 
+<% @subject = @message.subject %>
 <%= render 'form', message: @message %>
 
 <%= link_to 'Show', @message %> |

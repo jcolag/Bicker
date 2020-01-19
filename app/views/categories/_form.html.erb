@@ -16,7 +16,7 @@
   <label for="of"><b>Category Type:</b></label>
   <%= select 'category', 'of', [ 'message', 'category' ] %><br>
   <label for="category_id"><b>Parent:</b></label>
-  <%= select 'category', 'category_id', Category.all.collect { |p| [ p.name, p.id ]}, :include_blank => true %><br>
+  <%= select 'category', 'category_id', Category.all.collect { |p| [ p.name, p.id ]}, :include_blank => true, :value => @category_id %><br>
 
   <div class="actions">
     <%= form.submit %>

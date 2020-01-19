@@ -1,5 +1,7 @@
-<h1>Editing Category</h1>
+<h1>Editing <%= @category.name %> Category</h1>
 
+<% @name = @category.name %>
+<% @category_id = @category.category_id %>
 <%= render 'form', category: @category %>
 
 <%= link_to 'Show', @category %> |

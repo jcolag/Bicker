@@ -13,7 +13,7 @@
   <tbody>
     <% @messages.each do |message| %>
       <tr>
-        <td><%= link_to message.subject, message %></td>
+        <td><b><%= link_to message.subject, message %><b></td>
         <td><%= link_to 'Edit', edit_message_path(message) %></td>
         <td><%= link_to 'Destroy', message, method: :delete, data: { confirm: 'Are you sure?' } %></td>
       </tr>

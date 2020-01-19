@@ -6,23 +6,9 @@
 
 <h4>Author: <%= User.find_by_id(@message.user_id).login %></h4>
 
-<% paragraphs = Paragraph.select { |p|
-  p.message_id = @message.id && p.parent_id.nil?
-} %>
-<% last = paragraphs.select { |p| p.parent_id.nil? &&  p.next_id.nil? } %>
-<% lastp = last.first %>
-<% plist = Array.new(1, lastp) %>
-<% paragraphs.delete lastp %>
-<% while paragraphs.count > 0 do %>
-  <% nextl = paragraphs.select { |p| p.next_id = lastp.id } %>
-  <% nextp = nextl.first %>
-  <% paragraphs.delete nextp %>
-  <% plist.push nextp %>
-  <% lastp = nextp %>
-<% end %>
-<% plist.reverse_each do |para| %>
-  <p class="intro-text">
-  <%= para.content %>
+<% @paragraphs.each do |para| %>
+  <p>
+    <%= raw para.content %>
   </p>
 <% end %>
 
