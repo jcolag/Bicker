@@ -17,6 +17,77 @@
 //@import "bootstrap-sprockets";
 //@import "bootstrap";
 
+@font-face {
+  font-family: 'Paprika';
+  src: url('/fonts/Paprika-Regular.ttf');
+  font-weight: 700;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Roboto';
+  src: url('/fonts/Roboto-Regular.ttf');
+  font-weight: 400;
+  font-style: normal;
+}
+
+$bg: #fbeec1;
+$menu-bg: #daad86;
+$menu-bg-h: #bc986a;
+$text-color: #294c5f;
+$text-color-l: #659dbd;
+$h-color: #8d8741;
+
+body {
+  background-color: $bg;
+  background-image: url("/images/plasma-texture.png");
+  color: $text-color;
+  font-family: 'Roboto', Sans-Serif;
+}
+
+h1,h2,h3,h4,h5,h6 {
+  color: $h-color;
+  font-family: Paprika;
+  font-weight: bold;
+  text-align: center;
+}
+
+h1 {
+  letter-spacing: -0.05em;
+  word-spacing: -0.04em;
+}
+
+h2 {
+  letter-spacing: -0.03em;
+  word-spacing: -0.02em;
+}
+
+input[type=submit] {
+  background-color: transparent;
+  border-radius: 1em;
+  color: $text-color;
+  font-weight: bold;
+  line-height: 2em;
+}
+
+table {
+  width: 100%;
+}
+
+table th {
+  background-color: $text-color;
+  color: $bg;
+}
+
+table td {
+  background-color: $menu-bg;
+}
+
+table td a {
+  color: $text-color;
+  text-decoration: none;
+}
+
 #main-container {
   position: relative;
   padding-top: 50px;
@@ -36,61 +107,79 @@
   text-decoration: none;
 }
 
-body {
-  background: #f2f2f2;
-}
-
-th {
-  background-color: #333333;
-  color: white;
-}
-
-td {
-  background-color: #808080;
-  color: white;
-}
-
 nav {
-  background-color: darkgreen;
-  color: white;
+  background-color: $menu-bg;
   line-height: 3em;
+  margin: 0;
 }
 
 nav a {
-  color: orange;
+  color: $h-color;
+  display: block;
+  font-size: 20px;
+  padding: 0 10px;
+  text-decoration: none;
+}
+
+nav a:hover {
+  color: $menu-bg-h;
 }
 
 nav div {
   float: left;
 }
 
-nav li {
-  display: block;
-  padding-left: 0.25em;
+nav .dropdown {
+  display: inline-block;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  position: relative;
   transition-duration: 0.5s;
 }
 
-nav li:hover {
+nav .dropdown:hover {
   cursor: pointer;
 }
 
-nav ul li ul {
+nav ul .dropdown .dropdown-menu {
   display: none;
-  left: 0;
+  left: -1.5em;
+  list-style: none;
   opacity: 0;
-//  position: absolute;
+  position: absolute;
+  top: 3em;
   transition: all 0.5s ease;
   visibility: hidden;
 }
 
-nav ul li:hover > ul, nav ul li ul:hover {
-  display: block;
+nav ul .dropdown:hover > .dropdown-menu,
+nav ul .dropdown .dropdown-menu:hover {
+  display: inline-block;
   opacity: 1;
   visibility: visible;
 }
 
-nav ul li ul li {
-  background-color: green;
+nav ul .dropdown .dropdown-menu li {
+  background-color: $menu-bg;
   clear: both;
-  width: 99%;
+  display: list-item;
+  float: none;
+  width: 10em;
+}
+
+.logo {
+  padding-left: 0.5em;
+  padding-right: 0.5em;
+  margin-top: 0.25em;
+}
+
+.main-logo {
+  margin-left: 33%;
+  width: 33%;
+}
+
+.main-panel {
+  margin-left: 25%;
+  width: 50%;
 }
