@@ -7,9 +7,19 @@
 <h4>Author: <%= User.find_by_id(@message.user_id).login %></h4>
 
 <% @paragraphs.each do |para| %>
-  <p>
-    <%= raw para.content %>
-  </p>
+  <div class="msg-paragraph">
+    <p class="msg-par-text">
+      <%= raw para.content %>
+    </p>
+    <p class="msg-par-avatar">
+      <% user = User.find_by_id(para.user_id) %>
+      <%= link_to image_tag(avatar 100, user), '/' %>
+      <br>
+      <span class="id-time"><%= user.login %></span>
+      <br>
+      <span class="id-time"><%= para.created_at %></span>
+    </p>
+  </div>
 <% end %>
 
 <p class="intro-text">

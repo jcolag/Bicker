@@ -11,6 +11,9 @@ class CategoriesController < ApplicationController
   # GET /categories/1
   # GET /categories/1.json
   def show
+    @messages = Message.order('created_at DESC').select { |m|
+      m.category_id == @category.id
+    }
   end
 
   # GET /categories/new

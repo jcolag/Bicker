@@ -6,16 +6,30 @@
   <thead>
     <tr>
       <th>Subject</th>
-      <th colspan="2"></th>
+      <th colspan="3"></th>
     </tr>
   </thead>
 
   <tbody>
     <% @messages.each do |message| %>
       <tr>
-        <td><b><%= link_to message.subject, message %><b></td>
-        <td><%= link_to 'Edit', edit_message_path(message) %></td>
-        <td><%= link_to 'Destroy', message, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+        <td>
+          <b><%= link_to message.subject, message %><b>
+        </td>
+        <td class="avatar-column">
+          <% user = User.find_by_id message.user_id %>
+          <%= image_tag avatar(16, user), :alt => user.login, :title => user.login %>
+        </td>
+        <td class="button-column">
+          <% if current_user.id == message.user_id %>
+            <%= link_to 'Edit', edit_message_path(message) %>
+          <% end %>
+        </td>
+        <td class="button-column">
+          <% if current_user.id == message.user_id %>
+            <%= link_to 'Delete', message, method: :delete, data: { confirm: 'Are you sure?' } %>
+          <% end %>
+        </td>
       </tr>
     <% end %>
   </tbody>

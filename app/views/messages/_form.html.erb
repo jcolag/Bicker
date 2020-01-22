@@ -28,7 +28,7 @@
   <%= hidden_field 'message', 'version', :value => @version || 1 %>
   <%= hidden_field 'message', 'user_id', :value => warden.user.id %>
   <label for="category_id"><b>Category:</b></label>
-  <%= select 'message', 'category_id', Category.all.collect { |p| [ p.name, p.id ] } %><br>
+  <%= select 'message', 'category_id', @categories %><br>
 
   <div class="actions">
     <%= form.submit %>

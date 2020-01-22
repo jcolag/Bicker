@@ -138,6 +138,10 @@ nav .dropdown {
   transition-duration: 0.5s;
 }
 
+nav .avatar {
+  float: right;
+}
+
 nav .dropdown:hover {
   cursor: pointer;
 }
@@ -182,4 +186,69 @@ nav ul .dropdown .dropdown-menu li {
 .main-panel {
   margin-left: 25%;
   width: 50%;
+}
+
+.left-column {
+  float: left;
+  width: 49%;
+}
+
+.right-column {
+  float: right;
+  width: 49%;
+}
+
+.after-column {
+  clear: both;
+}
+
+.msg-paragraph {
+  border: 1px solid $text-color-l;
+  border-radius: 2em;
+  display: table;
+  margin-bottom: 1em;
+  width: 100%;
+}
+
+.msg-par-text {
+  display: table-cell;
+  height: 100%;
+  padding: 1em;
+  vertical-align: middle;
+  width: calc(100% - 100px);
+}
+
+.msg-par-avatar {
+  border-left: 1px solid $text-color-l;
+  display: table-cell;
+  height: 100%;
+  line-height: 100%;
+  text-align: center;
+  vertical-align: middle;
+  width: 100px;
+}
+
+.avatar-column {
+  background: $bg;
+  border: 2px solid $menu-bg;
+  text-align: center;
+  vertical-align: middle;
+}
+
+.button-column {
+  border: 2px solid $menu-bg-h;
+  border-radius: 0.5em;
+  text-align: center;
+}
+
+.button-column:hover {
+  background: $menu-bg-h;
+  border: 2px solid $menu-bg;
+  border-radius: 0.75em;
+  text-align: center;
+}
+
+.id-time {
+  font-size: x-small;
+  font-weight: light;
 }

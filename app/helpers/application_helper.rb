@@ -1,3 +1,5 @@
+require 'libravatar'
+
 module ApplicationHelper
   def boostrap_class(alert)
     { success: 'alert-success', error: 'alert-danger', notice: 'alert-success', warning: 'alert-warning',
@@ -14,5 +16,15 @@ module ApplicationHelper
       end)
     end
     nil
+  end
+  
+  def avatar sz = 50, user = current_user
+    libra = Libravatar.new({
+      :email => user.email,
+      :size => sz,
+      :https => true,
+      :default => 'robohash'
+    })
+    libra.to_s
   end
 end
