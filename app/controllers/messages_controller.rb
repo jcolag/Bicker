@@ -236,7 +236,22 @@ class MessagesController < ApplicationController
       escaped.gsub! '&#39;', "'"
       punct = RubyPants.new(escaped, 3).to_html
       html = mark.render punct
-      paragraph.content = html.sub('<p>', '').reverse.sub('</p>'.reverse, '').reverse
+      paragraph.content = html
+        .sub('<p>', '')
+        .reverse.sub('</p>'.reverse, '')
+        .reverse
+      if !paragraph.content.starts_with?('<code>') and
+         !paragraph.content.starts_with?('<table>') and
+         !paragraph.content.starts_with?(/<h[1-6]/)
+        paragraph.content = paragraph.content
+          .gsub(
+            /(\.|,|!|\?|:|\(|\)|&ndash;|&mdash;|&hellip;)/,
+            "\n".concat('\1').concat("\n")
+          )
+          .split("\n")
+      else
+        paragraph.content = [ paragraph.content ];
+      end
       paragraph
     end
 

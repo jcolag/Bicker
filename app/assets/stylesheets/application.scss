@@ -252,3 +252,22 @@ nav ul .dropdown .dropdown-menu li {
   font-size: x-small;
   font-weight: light;
 }
+
+.punctuation-button {
+  background-color: $text-color;
+  border: 2px solid $text-color-l;
+  border-radius: 0.5em;
+  color: $bg;
+  display: inline-block;
+  font-weight: bold;
+  margin-left: 0.1em;
+  margin-right: 0.1em;
+  text-align: center;
+  text-decoration: none;
+  min-width: 1em;
+}
+
+.punctuation-button a {
+  color: $bg;
+  text-decoration: none;
+}
