@@ -75,7 +75,11 @@ class MessagesController < ApplicationController
     respond_to do |format|
       if @message.save
         pars.reverse_each do |p|
-          if block_par.nil? and (p.start_with?('```') or p.start_with?('~~~') or p.start_with?('|'))
+          if block_par.nil? and
+            (p.start_with?('```') or
+              p.start_with?('~~~') or
+              p.start_with?('|')
+            )
             block_par = p + "\n"
           elsif
             (
@@ -245,10 +249,21 @@ class MessagesController < ApplicationController
          !paragraph.content.starts_with?(/<h[1-6]/)
         paragraph.content = paragraph.content
           .gsub(
-            /(\.|,|!|\?|:|\(|\)|&ndash;|&mdash;|&hellip;)/,
+            /(\.|,|!|\?|:|\(|\)|&|;|\/|&ndash;|&mdash;|&hellip;)/m,
             "\n".concat('\1').concat("\n")
           )
+          .gsub(/(<a [^<]*<[^>]*>)/) { |match|
+            match.gsub(/\n/) { |inner|
+              ""
+            }
+          }
+          .gsub(/(<[^>]*>)/) { |match|
+            match.gsub(/\n/) { |inner|
+              ""
+            }
+          }
           .split("\n")
+        Rails.logger.debug(paragraph.content)
       else
         paragraph.content = [ paragraph.content ];
       end
