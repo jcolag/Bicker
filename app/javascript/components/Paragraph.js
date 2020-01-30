@@ -18,9 +18,14 @@ class Paragraph extends React.Component {
       ':',
       '(',
       ')',
+      '&',
+      '/',
       '&ndash;',
+      '&#8212;',
       '&mdash;',
+      '&#8211;',
       '&hellip;',
+      '&#8230;',
     ];
 
     if (punct.indexOf(text) >= 0) {

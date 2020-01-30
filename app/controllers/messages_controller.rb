@@ -252,18 +252,10 @@ class MessagesController < ApplicationController
             /(\.|,|!|\?|:|\(|\)|&|;|\/|&ndash;|&mdash;|&hellip;)/m,
             "\n".concat('\1').concat("\n")
           )
-          .gsub(/(<a [^<]*<[^>]*>)/) { |match|
-            match.gsub(/\n/) { |inner|
-              ""
-            }
-          }
-          .gsub(/(<[^>]*>)/) { |match|
-            match.gsub(/\n/) { |inner|
-              ""
-            }
+          .gsub(/(<a [^<]*<[^>]*>|<[^>]*>|&[A-Za-z]*;|&\n*#[0-9]*\n*;)/) { |match|
+            match.gsub(/\n/) { |inner| "" }
           }
           .split("\n")
-        Rails.logger.debug(paragraph.content)
       else
         paragraph.content = [ paragraph.content ];
       end
