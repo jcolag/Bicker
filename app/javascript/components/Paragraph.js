@@ -29,9 +29,9 @@ class Paragraph extends React.Component {
     ];
 
     if (punct.indexOf(text) >= 0) {
-      return(<PuncButton key={idx} punc={text} />);
+      return(<PuncButton count={idx} key={idx} punc={text} />);
     } else {
-      return(<ClauseSpan clause={text} key={idx} />);
+      return(<ClauseSpan clause={text} count={idx} key={idx} />);
     }
   }
   

@@ -32,6 +32,7 @@
 }
 
 $bg: #fbeec1;
+$bg-l: #fdf5d9;
 $menu-bg: #daad86;
 $menu-bg-h: #bc986a;
 $text-color: #294c5f;
@@ -262,6 +263,22 @@ nav ul .dropdown .dropdown-menu li {
   font-weight: bold;
   margin-left: 0.1em;
   margin-right: 0.1em;
+  padding-bottom: 0;
+  text-align: center;
+  text-decoration: none;
+  min-width: 1em;
+}
+
+.toggled-punctuation-button {
+  background-color: $text-color-l;
+  border: 2px solid $text-color;
+  border-radius: 0.5em;
+  color: $text-color;
+  display: inline-block;
+  font-weight: bold;
+  margin-left: 0.1em;
+  margin-right: 0.1em;
+  padding-bottom: 0.5em;
   text-align: center;
   text-decoration: none;
   min-width: 1em;
@@ -270,4 +287,27 @@ nav ul .dropdown .dropdown-menu li {
 .punctuation-button a {
   color: $bg;
   text-decoration: none;
+}
+
+.reply-form {
+  border: 1px solid $text-color;
+  border-radius: 1em;
+  display: none;
+  padding: 0.25em;
+  text-align: center;
+  width: 100%;
+}
+
+.reply-form textarea {
+  background-color: $bg-l;
+  color: $text-color;
+}
+
+.reply-form button {
+  background-color: $text-color;
+  border-radius: 1em;
+  color: $bg;
+  font-size: 0.8em;
+  font-weight: bold;
+  height: 2.5em;
 }

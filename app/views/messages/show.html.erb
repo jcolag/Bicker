@@ -1,3 +1,37 @@
+<script type="text/javascript">
+function toggleReplyForm(e) {
+  e.persist();
+  var target = e.target;
+console.log(target);
+
+  while (target.tagName.toLowerCase() !== 'a') {
+    target = target.parentNode;
+console.log(target);
+  }
+
+  var id = target.attributes.name.value;
+  var formId = `reply-form-${id}`;
+  var form = document.getElementById(formId);
+  
+  if (form === null) {
+    console.log(`can't find ${formId}`);
+    return;
+  }
+  
+  var state = form.style.display;
+  
+  if (state === 'block') {
+    form.style.display = 'none';
+    target.classList.remove('toggled-punctuation-button');
+    target.classList.add('punctuation-button');
+  } else {
+    form.style.display = 'block';
+    target.classList.remove('punctuation-button');
+    target.classList.add('toggled-punctuation-button');
+  }
+}
+</script>
+
 <p id="notice"><%= notice %></p>
 
 <h2><%= @message.subject %></h2>
