@@ -2,11 +2,9 @@
 function toggleReplyForm(e) {
   e.persist();
   var target = e.target;
-console.log(target);
 
   while (target.tagName.toLowerCase() !== 'a') {
     target = target.parentNode;
-console.log(target);
   }
 
   var id = target.attributes.name.value;

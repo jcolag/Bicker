@@ -19,12 +19,21 @@ module ApplicationHelper
   end
   
   def avatar sz = 50, user = current_user
-    libra = Libravatar.new({
-      :email => user.email,
-      :size => sz,
-      :https => true,
-      :default => 'robohash'
-    })
+    if user.nil?
+      libra = Libravatar.new({
+        :email => 'nobody@nowhere.invalid',
+        :size => sz,
+        :https => true,
+        :default => 'robohash'
+      })
+    else
+      libra = Libravatar.new({
+        :email => user.email,
+        :size => sz,
+        :https => true,
+        :default => 'robohash'
+      })
+    end
     libra.to_s
   end
 end

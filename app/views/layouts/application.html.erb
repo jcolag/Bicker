@@ -80,7 +80,10 @@
           </ul>
         </li>
         <li class="dropdown avatar">
-          <%= link_to image_tag(avatar), edit_user_registration_path, :title => current_user.login %>
+          <%= link_to image_tag(avatar),
+            edit_user_registration_path,
+            :title => current_user.nil? ? '' : current_user.login
+          %>
         </li>
       </ul>
     </nav>
