@@ -8,7 +8,7 @@ class Paragraph extends React.Component {
     super(props);
   }
   
-  choose (text, idx) {
+  choose (text, idx, pnumber) {
     const punct = [
       '.',
       ',',
@@ -29,24 +29,29 @@ class Paragraph extends React.Component {
     ];
 
     if (punct.indexOf(text) >= 0) {
-      return(<PuncButton count={idx} key={idx} punc={text} />);
+      return(<PuncButton
+        count={idx}
+        key={idx}
+        pnumber={pnumber}
+        punc={text}
+      />);
     } else {
       return(<ClauseSpan clause={text} count={idx} key={idx} />);
     }
   }
   
-  paragraphParts (self, contentArray) {
+  paragraphParts (self, contentArray, pnumber) {
     const components = [];
 
     contentArray.map(function (c, idx) {
-      components.push(self.choose(c, idx));
+      components.push(self.choose(c, idx, pnumber));
     });
     return components;
   }
   
   render () {
     const array = JSON.parse(this.props.content.__html);
-    const para = this.paragraphParts(this, array);
+    const para = this.paragraphParts(this, array, this.props.pnum);
     return (
       <React.Fragment>
         <div className="msg-paragraph">
@@ -77,6 +82,7 @@ class Paragraph extends React.Component {
 
 Paragraph.propTypes = {
   avatar: PropTypes.string,
+  pnum: PropTypes.number,
   text: PropTypes.string,
   ts: PropTypes.string,
   when: PropTypes.string,

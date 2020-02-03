@@ -9,21 +9,25 @@ class PuncButton extends React.Component {
   
   render () {
     const html = this.asMarkup(this.props.punc);
+    const name = `${this.props.pnumber}-${this.props.count}`;
     return (
       <React.Fragment>
         <a
           className='punctuation-button'
           href='javascript:void(0)'
-          name={this.props.count}
+          name={name}
           onClick={toggleReplyForm}
           title="Click to reply here"
         >
           <span
-            name={this.props.count}
+            name={name}
             dangerouslySetInnerHTML={ html }
           />
         </a>
-        <ReplyForm count={ this.props.count } />
+        <ReplyForm
+          count={ this.props.count }
+          pnumber={ this.props.pnumber }
+        />
       </React.Fragment>
     );
   }
@@ -31,6 +35,7 @@ class PuncButton extends React.Component {
 
 PuncButton.propTypes = {
   count: PropTypes.number,
+  pnumber: PropTypes.number,
   punc: PropTypes.string,
 };
 export default PuncButton

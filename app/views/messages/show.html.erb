@@ -38,6 +38,7 @@ function toggleReplyForm(e) {
 
 <h4>Author: <%= User.find_by_id(@message.user_id).login %></h4>
 
+<% count = 1 %>
 <% @paragraphs.each do |para| %>
   <% user = User.find_by_id(para.user_id) %>
   <%= react_component 'Paragraph', {
@@ -45,10 +46,12 @@ function toggleReplyForm(e) {
     content: {
       __html: para.content
     },
+    pnum: count,
     ts: para.created_at.to_formatted_s(:db),
     when: time_ago_in_words(para.created_at),
     who: user.login
   } %>
+  <% count += 1 %>
 <% end %>
 
 <p class="intro-text">

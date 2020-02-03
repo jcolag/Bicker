@@ -3,10 +3,11 @@ import PropTypes from "prop-types";
 
 class ReplyForm extends React.Component {
   render () {
+    const id = `reply-form-${this.props.pnumber}-${this.props.count}`;
     return (
       <React.Fragment>
         <form
-          id={ `reply-form-${this.props.count}` }
+          id={id}
           className="reply-form"
         >
           <div>
@@ -22,6 +23,7 @@ class ReplyForm extends React.Component {
 
 ReplyForm.propTypes = {
   count: PropTypes.number,
+  pnumber: PropTypes.number,
   text: PropTypes.string,
 };
 export default ReplyForm
