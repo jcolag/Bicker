@@ -42,9 +42,31 @@ class Paragraph extends React.Component {
   
   paragraphParts (self, contentArray, pnumber) {
     const components = [];
+    const lengths = {
+      '.': 1,
+      ',': 1,
+      '!': 1,
+      '?': 1,
+      ';': 1,
+      ':': 1,
+      '(': 1,
+      ')': 1,
+      '&': 1,
+      '/': 1,
+      '&ndash;': 2,
+      '&#8212;': 2,
+      '&mdash;': 3,
+      '&#8211;': 3,
+      '&hellip;': 3,
+      '&#8230;': 3,
+    };
+    let length = 0;
 
     contentArray.map(function (c, idx) {
-      components.push(self.choose(c, idx, pnumber));
+      const corrlen = Object.prototype.hasOwnProperty.call(lengths, c) ?
+        lengths[c] : c.length;
+      components.push(self.choose(c, idx, pnumber, length));
+      length += corrlen;
     });
     return components;
   }
