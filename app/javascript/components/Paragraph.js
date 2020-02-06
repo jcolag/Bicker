@@ -8,7 +8,7 @@ class Paragraph extends React.Component {
     super(props);
   }
   
-  choose (text, idx, pnumber) {
+  choose (text, idx, pid, pnumber, offset) {
     const punct = [
       '.',
       ',',
@@ -32,15 +32,23 @@ class Paragraph extends React.Component {
       return(<PuncButton
         count={idx}
         key={idx}
+        offset={offset}
+        pid={pid}
         pnumber={pnumber}
         punc={text}
       />);
     } else {
-      return(<ClauseSpan clause={text} count={idx} key={idx} />);
+      return(<ClauseSpan
+        clause={text}
+        count={idx}
+        key={idx}
+        offset={offset}
+        pid={pid}
+      />);
     }
   }
   
-  paragraphParts (self, contentArray, pnumber) {
+  paragraphParts (self, contentArray, pid, pnumber) {
     const components = [];
     const lengths = {
       '.': 1,
@@ -65,7 +73,7 @@ class Paragraph extends React.Component {
     contentArray.map(function (c, idx) {
       const corrlen = Object.prototype.hasOwnProperty.call(lengths, c) ?
         lengths[c] : c.length;
-      components.push(self.choose(c, idx, pnumber, length));
+      components.push(self.choose(c, idx, pid, pnumber, length));
       length += corrlen;
     });
     return components;
@@ -73,7 +81,12 @@ class Paragraph extends React.Component {
   
   render () {
     const array = JSON.parse(this.props.content.__html);
-    const para = this.paragraphParts(this, array, this.props.pnum);
+    const para = this.paragraphParts(
+      this,
+      array,
+      this.props.pid,
+      this.props.pnum
+    );
     return (
       <React.Fragment>
         <div className="msg-paragraph">
@@ -104,6 +117,7 @@ class Paragraph extends React.Component {
 
 Paragraph.propTypes = {
   avatar: PropTypes.string,
+  pid: PropTypes.number,
   pnum: PropTypes.number,
   text: PropTypes.string,
   ts: PropTypes.string,

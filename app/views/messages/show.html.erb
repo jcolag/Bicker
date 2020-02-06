@@ -28,6 +28,15 @@ function toggleReplyForm(e) {
     target.classList.add('toggled-punctuation-button');
   }
 }
+
+function submitReply(e) {
+  e.persist();
+  var target = e.target;
+  var offset = Number(target.attributes.offset.value);
+  var paraId = Number(target.attributes.pid.value);
+  
+  console.log(`${paraId} - ${offset}`);
+}
 </script>
 
 <p id="notice"><%= notice %></p>
@@ -46,6 +55,7 @@ function toggleReplyForm(e) {
     content: {
       __html: para.content
     },
+    pid: para.id,
     pnum: count,
     ts: para.created_at.to_formatted_s(:db),
     when: time_ago_in_words(para.created_at),

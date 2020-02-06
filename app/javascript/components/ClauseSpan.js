@@ -10,7 +10,11 @@ class ClauseSpan extends React.Component {
     const html = this.asMarkup(this.props.clause);
     return (
       <React.Fragment>
-        <span dangerouslySetInnerHTML={ html } >
+        <span
+          dangerouslySetInnerHTML={ html }
+          offset={this.props.offset}
+          pid={this.props.pid}
+        >
         </span>
       </React.Fragment>
     );
@@ -18,6 +22,8 @@ class ClauseSpan extends React.Component {
 }
 
 ClauseSpan.propTypes = {
+  offset: PropTypes.number,
+  pid: PropTypes.number,
   text: PropTypes.string,
 };
 export default ClauseSpan

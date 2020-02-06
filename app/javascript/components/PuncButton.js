@@ -16,16 +16,20 @@ class PuncButton extends React.Component {
           className='punctuation-button'
           href='javascript:void(0)'
           name={name}
+          offset={this.props.offset}
           onClick={toggleReplyForm}
           title="Click to reply here"
         >
           <span
-            name={name}
             dangerouslySetInnerHTML={ html }
+            name={name}
+            offset={this.props.offset}
           />
         </a>
         <ReplyForm
           count={ this.props.count }
+          offset={this.props.offset}
+          pid={this.props.pid}
           pnumber={ this.props.pnumber }
         />
       </React.Fragment>
@@ -35,6 +39,8 @@ class PuncButton extends React.Component {
 
 PuncButton.propTypes = {
   count: PropTypes.number,
+  offset: PropTypes.number,
+  pid: PropTypes.number,
   pnumber: PropTypes.number,
   punc: PropTypes.string,
 };

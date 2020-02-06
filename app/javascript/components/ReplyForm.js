@@ -13,7 +13,14 @@ class ReplyForm extends React.Component {
           <div>
             <textarea cols="80" rows="3" />
             <br />
-            <button type="submit">Submit Reply</button>
+            <button
+              offset={this.props.offset}
+              onClick={submitReply}
+              pid={this.props.pid}
+              type="button"
+            >
+              Submit Reply
+            </button>
           </div>
         </form>
       </React.Fragment>
@@ -23,6 +30,8 @@ class ReplyForm extends React.Component {
 
 ReplyForm.propTypes = {
   count: PropTypes.number,
+  offset: PropTypes.number,
+  pid: PropTypes.number,
   pnumber: PropTypes.number,
   text: PropTypes.string,
 };
