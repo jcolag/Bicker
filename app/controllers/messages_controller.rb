@@ -183,6 +183,11 @@ class MessagesController < ApplicationController
       format.json { head :no_content }
     end
   end
+  
+  def reply
+Rails.logger.debug("!Reply!")
+    format.json { head :no_content, status: :ok }
+  end
 
   private
     # Use callbacks to share common setup or constraints between actions.

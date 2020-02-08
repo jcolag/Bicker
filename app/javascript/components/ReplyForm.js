@@ -11,7 +11,11 @@ class ReplyForm extends React.Component {
           className="reply-form"
         >
           <div>
-            <textarea cols="80" rows="3" />
+            <textarea
+              cols="80"
+              placeholder="It's important to be kind when replying..."
+              rows="3"
+            />
             <br />
             <button
               offset={this.props.offset}

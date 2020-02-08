@@ -7,7 +7,17 @@ Rails.application.routes.draw do
   resources :categories
   namespace :api do
     namespace :v1 do
-      resources :messages, only: [:index, :create, :destroy, :update]
+      resources :messages, only: [
+        :index,
+        :create,
+        :destroy,
+        :update,
+        :reply
+      ] do
+        collection do
+          get 'reply'
+        end
+      end
     end
   end
 end

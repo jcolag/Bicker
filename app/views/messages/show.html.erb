@@ -34,8 +34,31 @@ function submitReply(e) {
   var target = e.target;
   var offset = Number(target.attributes.offset.value);
   var paraId = Number(target.attributes.pid.value);
+  var parent = target.parentNode;
+  var textarea = parent.childNodes[0];
+  var message = encodeURIComponent(textarea.value);
+  var request = new XMLHttpRequest();
+  var url = `/api/v1/messages/reply?paraId=${paraId}&offset=${offset}&message=${message}`;
   
-  console.log(`${paraId} - ${offset}`);
+  request.open(
+    'GET',
+    url,
+    true
+  );
+  request.onload = function() {
+    if (this.status >= 200 && this.status < 400) {
+      var resp = this.response;
+      console.log(this.response);
+    } else {
+      console.error(this);
+    }
+  };
+  
+  request.onerror = function() {
+    // There was a connection error of some sort
+  };
+  
+  request.send();
 }
 </script>
 
