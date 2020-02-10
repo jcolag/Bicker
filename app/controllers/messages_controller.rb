@@ -14,23 +14,19 @@ class MessagesController < ApplicationController
   # GET /messages/1
   # GET /messages/1.json
   def show
-    paragraphs = Paragraph.select { |p|
-      p.message_id == @message.id and p.parent_id.nil?
-    }
+    paragraphs = getParagraphs @message.id, nil
     if paragraphs.count == 0
       @paragraphs = Array.new
       return
     end
-    last = paragraphs.select { |p| p.parent_id.nil? and  p.next_id.nil? }
+    last = paragraphs.select { |p| p.parent_id.nil? and p.next_id.nil? }
     lastp = last.first
     paragraphs.delete lastp
-    lastp = format_paragraph lastp
     plist = Array.new(1, lastp)
     while paragraphs.count > 0 do
       nextl = paragraphs.select { |p| p.next_id == lastp.id }
       nextp = nextl.first
       paragraphs.delete nextp
-      nextp = format_paragraph nextp
       plist.push nextp
       lastp = nextp
     end
@@ -65,7 +61,7 @@ class MessagesController < ApplicationController
       end
       return
     end
-    
+
     if params[:subject] == ''
       params[:subject] = nil
     end
@@ -183,7 +179,7 @@ class MessagesController < ApplicationController
       format.json { head :no_content }
     end
   end
-  
+
   def reply
 Rails.logger.debug("!Reply!")
     format.json { head :no_content, status: :ok }
@@ -207,12 +203,16 @@ Rails.logger.debug("!Reply!")
            :category_id
          )
     end
-    
+
     def split_paragraphs msg
       msg[:content].split(/[\r\n]/).select { |line| line.length > 0 }
     end
-    
+
     def format_paragraph paragraph
+      if paragraph.nil?
+        return
+      end
+
       rend = Redcarpet::Render::HTML.new(
         escape_html: true,
         hard_wrap: true,
@@ -294,5 +294,25 @@ Rails.logger.debug("!Reply!")
       p = pars.delete_at(which)
       found << p
       return sortParagraph(pars, found.last.next_id, found)
+    end
+
+    def getParagraphs message, parent
+      result = []
+      paragraphs = Paragraph.select { |p|
+        p.message_id == message and p.parent_id == parent
+      }.each { |p|
+        user = User.select { |u| u.id == p.user_id }.first
+        p = format_paragraph p
+        p.class.module_eval {
+          attr_accessor :avatar
+          attr_accessor :children
+          attr_accessor :who
+        }
+        p.avatar = helpers.avatar 100, user
+        p.children = getParagraphs message, p.id
+        p.who = user
+        result.push p
+      }
+      result
     end
 end
