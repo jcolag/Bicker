@@ -10,14 +10,14 @@ function toggleReplyForm(e) {
   var id = target.attributes.name.value;
   var formId = `reply-form-${id}`;
   var form = document.getElementById(formId);
-  
+
   if (form === null) {
     console.log(`can't find ${formId}`);
     return;
   }
-  
+
   var state = form.style.display;
-  
+
   if (state === 'block') {
     form.style.display = 'none';
     target.classList.remove('toggled-punctuation-button');
@@ -39,7 +39,7 @@ function submitReply(e) {
   var message = encodeURIComponent(textarea.value);
   var request = new XMLHttpRequest();
   var url = `/api/v1/messages/reply?paraId=${paraId}&offset=${offset}&message=${message}`;
-  
+
   request.open(
     'GET',
     url,
@@ -53,11 +53,11 @@ function submitReply(e) {
       console.error(this);
     }
   };
-  
+
   request.onerror = function() {
     // There was a connection error of some sort
   };
-  
+
   request.send();
 }
 </script>
@@ -72,9 +72,9 @@ function submitReply(e) {
 
 <% count = 1 %>
 <% @paragraphs.each do |para| %>
-  <% user = User.find_by_id(para.user_id) %>
   <%= react_component 'Paragraph', {
-    avatar: avatar(100, user),
+    avatar: para.avatar,
+    children: para.children,
     content: {
       __html: para.content
     },
@@ -82,7 +82,7 @@ function submitReply(e) {
     pnum: count,
     ts: para.created_at.to_formatted_s(:db),
     when: time_ago_in_words(para.created_at),
-    who: user.login
+    who: para.who.login
   } %>
   <% count += 1 %>
 <% end %>
