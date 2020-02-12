@@ -79,7 +79,7 @@ class Api::V1::MessagesController < Api::V1::BaseController
             :message_id => paragraph.message_id,
             :parent_id => nil,
             :next_id => prev_par ? prev_par.id : nil,
-            :user_id => paragraph.user_id,
+            :user_id => current_user.id,
             :content => block_par
           }
           prev_par = Paragraph.new(par)
@@ -94,7 +94,7 @@ class Api::V1::MessagesController < Api::V1::BaseController
             :message_id => paragraph.message_id,
             :parent_id => paragraph.id,
             :next_id => prev_par ? prev_par.id : nil,
-            :user_id => paragraph.user_id,
+            :user_id => current_user.id,
             :content => lines
           }
         else
@@ -102,7 +102,7 @@ class Api::V1::MessagesController < Api::V1::BaseController
             :message_id => paragraph.message_id,
             :parent_id => paragraph.id,
             :next_id => prev_par ? prev_par.id : nil,
-            :user_id => paragraph.user_id,
+            :user_id => current_user.id,
             :content => p
           }
         end
@@ -113,8 +113,8 @@ class Api::V1::MessagesController < Api::V1::BaseController
     end
 
     args = {
-      after: lastPart,
-      before: firstPart,
+      after: fragment,
+      before: paragraph,
       message: params[:message],
       offset: params[:offset],
       paraId: params[:paraId],
