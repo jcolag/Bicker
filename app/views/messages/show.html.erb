@@ -81,7 +81,7 @@ function submitReply(e) {
     pid: para.id,
     pnum: count,
     ts: para.created_at.to_formatted_s(:db),
-    when: time_ago_in_words(para.created_at),
+    when: para.when,
     who: para.who.login
   } %>
   <% count += 1 %>

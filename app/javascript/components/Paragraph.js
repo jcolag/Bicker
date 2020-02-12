@@ -101,8 +101,8 @@ class Paragraph extends React.Component {
       pnum={c.id}
       text={c.content}
       ts={c.created_at.toString()}
-      when={c.created_at.toString()}
-      who={c.user_id.toString()}
+      when={c.when}
+      who={c.who.login}
     />));
     return result;
   }

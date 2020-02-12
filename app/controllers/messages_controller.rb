@@ -302,17 +302,37 @@ Rails.logger.debug("!Reply!")
         p.message_id == message and p.parent_id == parent
       }.each { |p|
         user = User.select { |u| u.id == p.user_id }.first
+        pp = ClientParagraph.new()
         p = format_paragraph p
-        p.class.module_eval {
-          attr_accessor :avatar
-          attr_accessor :children
-          attr_accessor :who
-        }
-        p.avatar = helpers.avatar 100, user
-        p.children = getParagraphs message, p.id
-        p.who = user
-        result.push p
+        pp.id = p.id
+        pp.message_id = p.message_id
+        pp.parent_id = p.parent_id
+        pp.next_id = p.next_id
+        pp.user_id = p.user_id
+        pp.content = p.content
+        pp.created_at = p.created_at
+        pp.updated_at = p.updated_at
+        pp.avatar = helpers.avatar 100, user
+        pp.children = getParagraphs message, p.id
+        pp.who = user
+        pp.when = helpers.time_ago_in_words(p.created_at)
+        result.push pp
       }
       result
     end
+end
+
+class ClientParagraph
+  attr_accessor :id
+  attr_accessor :message_id
+  attr_accessor :parent_id
+  attr_accessor :next_id
+  attr_accessor :user_id
+  attr_accessor :content
+  attr_accessor :created_at
+  attr_accessor :updated_at
+  attr_accessor :avatar
+  attr_accessor :children
+  attr_accessor :who
+  attr_accessor :when
 end
