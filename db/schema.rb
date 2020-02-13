@@ -10,7 +10,16 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_01_20_145304) do
+ActiveRecord::Schema.define(version: 2020_02_12_160951) do
+
+  create_table "beenseens", force: :cascade do |t|
+    t.integer "paragraph_id", null: false
+    t.integer "user_id", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["paragraph_id"], name: "index_beenseens_on_paragraph_id"
+    t.index ["user_id"], name: "index_beenseens_on_user_id"
+  end
 
   create_table "categories", force: :cascade do |t|
     t.string "name", null: false
@@ -97,6 +106,8 @@ ActiveRecord::Schema.define(version: 2020_01_20_145304) do
     t.index ["user_id"], name: "index_users_roles_on_user_id"
   end
 
+  add_foreign_key "beenseens", "paragraphs"
+  add_foreign_key "beenseens", "users"
   add_foreign_key "categories", "categories"
   add_foreign_key "events", "messages"
   add_foreign_key "events", "users"
