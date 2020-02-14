@@ -301,6 +301,15 @@ Rails.logger.debug("!Reply!")
       paragraphs = Paragraph.select { |p|
         p.message_id == message and p.parent_id == parent
       }.each { |p|
+        seen = Beenseen.select { |s|
+          s.paragraph_id == p.id and s.user_id == current_user.id
+        }
+        if seen.count == 0
+          see = Beenseen.new()
+          see.user_id = current_user.id
+          see.paragraph_id = p.id
+          see.save
+        end
         user = User.select { |u| u.id == p.user_id }.first
         pp = ClientParagraph.new()
         p = format_paragraph p
@@ -316,6 +325,7 @@ Rails.logger.debug("!Reply!")
         pp.children = getParagraphs message, p.id
         pp.who = user
         pp.when = helpers.time_ago_in_words(p.created_at)
+        pp.beenseen = seen.count > 0 ? true : false
         result.push pp
       }
       result
@@ -335,4 +345,5 @@ class ClientParagraph
   attr_accessor :children
   attr_accessor :who
   attr_accessor :when
+  attr_accessor :beenseen
 end

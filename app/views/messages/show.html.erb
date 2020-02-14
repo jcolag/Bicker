@@ -74,6 +74,7 @@ function submitReply(e) {
 <% @paragraphs.each do |para| %>
   <%= react_component 'Paragraph', {
     avatar: para.avatar,
+    beenseen: para.beenseen,
     children: para.children,
     content: {
       __html: para.content

@@ -13,7 +13,7 @@
  *= require_tree .
  *= require_self
  */
- 
+
 //@import "bootstrap-sprockets";
 //@import "bootstrap";
 
@@ -206,6 +206,16 @@ nav ul .dropdown .dropdown-menu li {
 .msg-paragraph {
   border: 1px solid $text-color-l;
   border-radius: 2em;
+  display: table;
+  margin-bottom: 1em;
+  width: 100%;
+}
+
+.msg-new-paragraph {
+  border-color: $menu-bg;
+  border-radius: 2em;
+  border-style: solid dotted;
+  border-width: 0.75em;
   display: table;
   margin-bottom: 1em;
   width: 100%;

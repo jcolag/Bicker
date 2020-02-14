@@ -92,6 +92,7 @@ class Paragraph extends React.Component {
 
     children.forEach(c => result.push(<Paragraph
       avatar={c.avatar}
+      beenseen={c.beenseen}
       content={{
         __html: c.content
       }}
@@ -125,6 +126,7 @@ class Paragraph extends React.Component {
       indent
     );
     const pad = `${indent}em`;
+    const pclass = this.props.beenseen ? "msg-paragraph" : "msg-new-paragraph"
     return (
       <React.Fragment>
         <div
@@ -132,7 +134,7 @@ class Paragraph extends React.Component {
             marginLeft: pad
           }}
         >
-          <div className="msg-paragraph">
+          <div className={ pclass }>
             <p
               className="msg-par-text"
             >
@@ -164,6 +166,7 @@ class Paragraph extends React.Component {
 
 Paragraph.propTypes = {
   avatar: PropTypes.string,
+  beenseen: PropTypes.boolean,
   indent: PropTypes.number,
   pid: PropTypes.number,
   pnum: PropTypes.number,
