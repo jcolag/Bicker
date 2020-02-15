@@ -245,14 +245,14 @@ Rails.logger.debug("!Reply!")
       escaped.gsub! '&#39;', "'"
       punct = RubyPants.new(escaped, 3).to_html
       html = mark.render punct
-      paragraph.content = html
+      content = html
         .sub('<p>', '')
         .reverse.sub('</p>'.reverse, '')
         .reverse
-      if !paragraph.content.starts_with?('<code>') and
-         !paragraph.content.starts_with?('<table>') and
-         !paragraph.content.starts_with?(/<h[1-6]/)
-        paragraph.content = paragraph.content
+      if !content.starts_with?('<code>') and
+         !content.starts_with?('<table>') and
+         !content.starts_with?(/<h[1-6]/)
+        content = content
           .gsub(
             /(\.|,|!|\?|:|\(|\)|&|;|\/|&ndash;|&mdash;|&hellip;)/m,
             "\n".concat('\1').concat("\n")
@@ -261,6 +261,19 @@ Rails.logger.debug("!Reply!")
             match.gsub(/\n/) { |inner| "" }
           }
           .split("\n")
+        if paragraph.split
+          if content.count == 1
+            content += " "
+          else
+            # It looks like we should test that the last element of
+            # the array is punctuation, but since this paragraph has
+            # been split, we already know it must be, so we can
+            # barrel through without any test
+            last = content.pop
+            content[-1] += last
+          end
+        end
+        paragraph.content = content
       else
         paragraph.content = [ paragraph.content ];
       end

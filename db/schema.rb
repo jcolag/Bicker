@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_02_12_160951) do
+ActiveRecord::Schema.define(version: 2020_02_13_170234) do
 
   create_table "beenseens", force: :cascade do |t|
     t.integer "paragraph_id", null: false
@@ -58,6 +58,7 @@ ActiveRecord::Schema.define(version: 2020_02_12_160951) do
     t.text "content"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.boolean "split", default: false, null: false
     t.index ["message_id"], name: "index_paragraphs_on_message_id"
     t.index ["next_id"], name: "index_paragraphs_on_next_id"
     t.index ["parent_id"], name: "index_paragraphs_on_parent_id"

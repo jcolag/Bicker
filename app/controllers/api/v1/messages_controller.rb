@@ -45,6 +45,7 @@ class Api::V1::MessagesController < Api::V1::BaseController
 
       paragraph.next_id = fragment.id
       paragraph.content = firstPart
+      paragraph.split = true
       paragraph.save
     end
 
