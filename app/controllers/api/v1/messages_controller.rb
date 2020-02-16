@@ -49,9 +49,10 @@ class Api::V1::MessagesController < Api::V1::BaseController
       paragraph.save
     end
 
-    rpars = split_paragraphs(message)
+    rpars = split_paragraphs message
     block_par = nil
     prev_par = nil
+    children = []
 
     rpars.reverse_each do |p|
       if block_par.nil? and
@@ -78,13 +79,14 @@ class Api::V1::MessagesController < Api::V1::BaseController
           block_par = block_par.split("\n").reverse.join("\n")
           par = {
             :message_id => paragraph.message_id,
-            :parent_id => nil,
+            :parent_id => paragraph.id,
             :next_id => prev_par ? prev_par.id : nil,
             :user_id => current_user.id,
             :content => block_par
           }
-          prev_par = Paragraph.new(par)
+          prev_par = Paragraph.new par
           prev_par.save
+          children.push prev_par
           block_par = nil
         end
         par = {}
@@ -107,8 +109,9 @@ class Api::V1::MessagesController < Api::V1::BaseController
             :content => p
           }
         end
-        prev_par = Paragraph.new(par)
+        prev_par = Paragraph.new par
         prev_par.save
+        children.push prev_par
         block_par = nil
       end
     end
@@ -116,6 +119,7 @@ class Api::V1::MessagesController < Api::V1::BaseController
     args = {
       after: fragment,
       before: paragraph,
+      children: children,
       message: params[:message],
       offset: params[:offset],
       paraId: params[:paraId],

@@ -269,6 +269,7 @@ nav ul .dropdown .dropdown-menu li {
   border: 2px solid $text-color-l;
   border-radius: 0.5em;
   color: $bg;
+  cursor: pointer;
   display: inline-block;
   font-weight: bold;
   margin-left: 0.1em;
@@ -284,6 +285,7 @@ nav ul .dropdown .dropdown-menu li {
   border: 2px solid $text-color;
   border-radius: 0.5em;
   color: $text-color;
+  cursor: pointer;
   display: inline-block;
   font-weight: bold;
   margin-left: 0.1em;

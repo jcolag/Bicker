@@ -10,6 +10,7 @@ function toggleReplyForm(e) {
   var id = target.attributes.name.value;
   var formId = `reply-form-${id}`;
   var form = document.getElementById(formId);
+  var textarea = document.querySelector(`#${formId} textarea`);
 
   if (form === null) {
     console.log(`can't find ${formId}`);
@@ -24,6 +25,7 @@ function toggleReplyForm(e) {
     target.classList.add('punctuation-button');
   } else {
     form.style.display = 'block';
+    textarea.focus();
     target.classList.remove('punctuation-button');
     target.classList.add('toggled-punctuation-button');
   }
@@ -36,6 +38,10 @@ function submitReply(e) {
   var paraId = Number(target.attributes.pid.value);
   var parent = target.parentNode;
   var textarea = parent.childNodes[0];
+  var form = parent.parentNode;
+  var linkName = form.attributes.id.value.replace('reply-form-', '');
+  var matches = document.getElementsByName(linkName);
+  var puncBtn = matches[0];
   var message = encodeURIComponent(textarea.value);
   var request = new XMLHttpRequest();
   var url = `/api/v1/messages/reply?paraId=${paraId}&offset=${offset}&message=${message}`;
@@ -48,7 +54,12 @@ function submitReply(e) {
   request.onload = function() {
     if (this.status >= 200 && this.status < 400) {
       var resp = this.response;
-      console.log(this.response);
+
+      form.style.display = 'none';
+      puncBtn.classList.remove('toggled-punctuation-button');
+      puncBtn.classList.add('punctuation-button');
+      textarea.value = '';
+      console.log(resp);
     } else {
       console.error(this);
     }
@@ -70,23 +81,7 @@ function submitReply(e) {
 
 <h4>Author: <%= User.find_by_id(@message.user_id).login %></h4>
 
-<% count = 1 %>
-<% @paragraphs.each do |para| %>
-  <%= react_component 'Paragraph', {
-    avatar: para.avatar,
-    beenseen: para.beenseen,
-    children: para.children,
-    content: {
-      __html: para.content
-    },
-    pid: para.id,
-    pnum: count,
-    ts: para.created_at.to_formatted_s(:db),
-    when: para.when,
-    who: para.who.login
-  } %>
-  <% count += 1 %>
-<% end %>
+<%= react_component 'Message', paragraphs: @paragraphs %>
 
 <p class="intro-text">
   <%= link_to 'Edit', edit_message_path(@message) %> |

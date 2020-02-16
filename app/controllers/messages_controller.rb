@@ -15,22 +15,7 @@ class MessagesController < ApplicationController
   # GET /messages/1.json
   def show
     paragraphs = getParagraphs @message.id, nil
-    if paragraphs.count == 0
-      @paragraphs = Array.new
-      return
-    end
-    last = paragraphs.select { |p| p.parent_id.nil? and p.next_id.nil? }
-    lastp = last.first
-    paragraphs.delete lastp
-    plist = Array.new(1, lastp)
-    while paragraphs.count > 0 do
-      nextl = paragraphs.select { |p| p.next_id == lastp.id }
-      nextp = nextl.first
-      paragraphs.delete nextp
-      plist.push nextp
-      lastp = nextp
-    end
-    @paragraphs = plist.reverse
+    @paragraphs = unrollParagraphs paragraphs
   end
 
   # GET /messages/new
@@ -181,7 +166,6 @@ class MessagesController < ApplicationController
   end
 
   def reply
-Rails.logger.debug("!Reply!")
     format.json { head :no_content, status: :ok }
   end
 
@@ -309,11 +293,35 @@ Rails.logger.debug("!Reply!")
       return sortParagraph(pars, found.last.next_id, found)
     end
 
+    def unrollParagraphs paragraphs
+      if paragraphs.count == 0
+        return Array.new
+      end
+      last = paragraphs.select { |p| p.next_id.nil? }
+      lastp = last.first
+      if lastp.children.count > 0
+        lastp.children = unrollParagraphs lastp.children
+      end
+      paragraphs.delete lastp
+      plist = Array.new(1, lastp)
+      while paragraphs.count > 0 do
+        nextl = paragraphs.select { |p| p.next_id == lastp.id }
+        nextp = nextl.first
+        paragraphs.delete nextp
+        if nextp.children.count > 0
+          nextp.children = unrollParagraphs nextp.children
+        end
+        plist.push nextp
+        lastp = nextp
+      end
+      plist.reverse
+    end
+
     def getParagraphs message, parent
       result = []
       paragraphs = Paragraph.select { |p|
         p.message_id == message and p.parent_id == parent
-      }.each { |p|
+      }.map { |p, count|
         seen = Beenseen.select { |s|
           s.paragraph_id == p.id and s.user_id == current_user.id
         }
@@ -326,19 +334,21 @@ Rails.logger.debug("!Reply!")
         user = User.select { |u| u.id == p.user_id }.first
         pp = ClientParagraph.new()
         p = format_paragraph p
+        pp.avatar = helpers.avatar 100, user
+        pp.beenseen = seen.count > 0 ? true : false
+        pp.children = getParagraphs message, p.id
+        pp.content = p.content
+        pp.count = count
+        pp.created_at = p.created_at
         pp.id = p.id
         pp.message_id = p.message_id
-        pp.parent_id = p.parent_id
         pp.next_id = p.next_id
-        pp.user_id = p.user_id
-        pp.content = p.content
-        pp.created_at = p.created_at
+        pp.parent_id = p.parent_id
+        pp.ts = p.created_at.to_formatted_s(:db)
         pp.updated_at = p.updated_at
-        pp.avatar = helpers.avatar 100, user
-        pp.children = getParagraphs message, p.id
-        pp.who = user
+        pp.user_id = p.user_id
         pp.when = helpers.time_ago_in_words(p.created_at)
-        pp.beenseen = seen.count > 0 ? true : false
+        pp.who = user
         result.push pp
       }
       result
@@ -346,17 +356,19 @@ Rails.logger.debug("!Reply!")
 end
 
 class ClientParagraph
+  attr_accessor :avatar
+  attr_accessor :beenseen
+  attr_accessor :children
+  attr_accessor :content
+  attr_accessor :count
+  attr_accessor :created_at
   attr_accessor :id
   attr_accessor :message_id
-  attr_accessor :parent_id
   attr_accessor :next_id
-  attr_accessor :user_id
-  attr_accessor :content
-  attr_accessor :created_at
+  attr_accessor :parent_id
+  attr_accessor :ts
   attr_accessor :updated_at
-  attr_accessor :avatar
-  attr_accessor :children
-  attr_accessor :who
+  attr_accessor :user_id
   attr_accessor :when
-  attr_accessor :beenseen
+  attr_accessor :who
 end

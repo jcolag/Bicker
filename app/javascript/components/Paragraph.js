@@ -93,23 +93,21 @@ class Paragraph extends React.Component {
     children.forEach(c => result.push(<Paragraph
       avatar={c.avatar}
       beenseen={c.beenseen}
-      content={{
-        __html: c.content
-      }}
+      children={c.children}
+      content={c.content}
       indent={indent + 1}
       key={`child-${c.id}`}
       pid={c.id}
       pnum={c.id}
-      text={c.content}
       ts={c.created_at.toString()}
       when={c.when}
-      who={c.who.login}
+      who={c.who}
     />));
     return result;
   }
 
   render () {
-    const array = JSON.parse(this.props.content.__html);
+    const array = JSON.parse(this.props.content);
     const para = this.paragraphParts(
       this,
       array,
@@ -135,17 +133,17 @@ class Paragraph extends React.Component {
           }}
         >
           <div className={ pclass }>
-            <p
+            <span
               className="msg-par-text"
             >
               { para }
-            </p>
+            </span>
             <p className="msg-par-avatar">
               <a href='/'>
                 <img draggable="false" src={ this.props.avatar } />
               </a>
               <br />
-              <span className="id-time">{ this.props.who }</span>
+              <span className="id-time">{ this.props.who.login }</span>
               <br />
               <span
                 className="id-time"
@@ -166,13 +164,13 @@ class Paragraph extends React.Component {
 
 Paragraph.propTypes = {
   avatar: PropTypes.string,
-  beenseen: PropTypes.boolean,
+  beenseen: PropTypes.bool,
+  count: PropTypes.number,
   indent: PropTypes.number,
   pid: PropTypes.number,
   pnum: PropTypes.number,
-  text: PropTypes.string,
   ts: PropTypes.string,
   when: PropTypes.string,
-  who: PropTypes.string,
+  who: PropTypes.object,
 };
 export default Paragraph

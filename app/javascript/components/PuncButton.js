@@ -6,7 +6,7 @@ class PuncButton extends React.Component {
   asMarkup(text) {
     return { __html: text };
   }
-  
+
   render () {
     const html = this.asMarkup(this.props.punc);
     const name = `${this.props.pnumber}-${this.props.count}`;
@@ -14,7 +14,6 @@ class PuncButton extends React.Component {
       <React.Fragment>
         <a
           className='punctuation-button'
-          href='javascript:void(0)'
           name={name}
           offset={this.props.offset}
           onClick={toggleReplyForm}
