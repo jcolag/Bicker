@@ -2,8 +2,19 @@ import React from "react";
 import PropTypes from "prop-types";
 
 class ReplyForm extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      count: this.props.count,
+      offset: this.props.offset,
+      pid: this.props.pid,
+      pnumber: this.props.pnumber,
+      text: this.props.punc,
+    };
+  }
+
   render () {
-    const id = `reply-form-${this.props.pnumber}-${this.props.count}`;
+    const id = `reply-form-${this.state.pnumber}-${this.state.count}`;
     return (
       <React.Fragment>
         <form
@@ -18,9 +29,9 @@ class ReplyForm extends React.Component {
             />
             <br />
             <button
-              offset={this.props.offset}
+              offset={this.state.offset}
               onClick={submitReply}
-              pid={this.props.pid}
+              pid={this.state.pid}
               type="button"
             >
               Submit Reply

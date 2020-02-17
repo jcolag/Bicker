@@ -5,10 +5,13 @@ import React from "react"
 class Message extends React.Component {
   constructor (props) {
     super(props);
+    this.state = {
+      paragraphs: this.props.paragraphs,
+    }
   }
 
   render () {
-    const paragraphs = this.props.paragraphs.map(
+    const paragraphs = this.state.paragraphs.map(
       p => <Paragraph
         avatar={p.avatar}
         beenseen={p.beenseen}

@@ -6,6 +6,19 @@ import ClauseSpan from "./ClauseSpan";
 class Paragraph extends React.Component {
   constructor (props) {
     super(props);
+    this.state = {
+      avatar: this.props.avatar,
+      beenseen: this.props.beenseen,
+      children: this.props.children,
+      content: this.props.content,
+      count: this.props.count,
+      indent: this.props.indent,
+      pid: this.props.pid,
+      pnum: this.props.pnum,
+      ts: this.props.ts,
+      when: this.props.when,
+      who: this.props.who,
+    };
   }
 
   choose (text, idx, pid, pnumber, offset) {
@@ -107,24 +120,24 @@ class Paragraph extends React.Component {
   }
 
   render () {
-    const array = JSON.parse(this.props.content);
+    const array = JSON.parse(this.state.content);
     const para = this.paragraphParts(
       this,
       array,
-      this.props.pid,
-      this.props.pnum
+      this.state.pid,
+      this.state.pnum
     );
-    const indent = this.props.indent === null
-      || typeof this.props.indent === 'undefined'
+    const indent = this.state.indent === null
+      || typeof this.state.indent === 'undefined'
       ? 0
-      : this.props.indent;
+      : this.state.indent;
     const children = this.paragraphChildren(
       this,
-      this.props.children,
+      this.state.children,
       indent
     );
     const pad = `${indent}em`;
-    const pclass = this.props.beenseen ? "msg-paragraph" : "msg-new-paragraph"
+    const pclass = this.state.beenseen ? "msg-paragraph" : "msg-new-paragraph"
     return (
       <React.Fragment>
         <div
@@ -140,16 +153,16 @@ class Paragraph extends React.Component {
             </span>
             <p className="msg-par-avatar">
               <a href='/'>
-                <img draggable="false" src={ this.props.avatar } />
+                <img draggable="false" src={ this.state.avatar } />
               </a>
               <br />
-              <span className="id-time">{ this.props.who.login }</span>
+              <span className="id-time">{ this.state.who.login }</span>
               <br />
               <span
                 className="id-time"
-                title={ this.props.ts }
+                title={ this.state.ts }
               >
-                { this.props.when } ago
+                { this.state.when } ago
               </span>
             </p>
           </div>
