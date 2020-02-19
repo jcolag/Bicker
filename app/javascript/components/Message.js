@@ -20,7 +20,7 @@ class Message extends React.Component {
         indent={p.indent}
         key={`p-${p.id}`}
         pid={p.id}
-        pnum={p.pnum}
+        pnum={p.id}
         ts={p.ts}
         when={p.when}
         who={p.who}
