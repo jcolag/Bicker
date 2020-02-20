@@ -40,8 +40,17 @@ class Api::V1::MessagesController < Api::V1::BaseController
       fragment.message_id = paragraph.message_id
       fragment.next_id = paragraph.next_id
       fragment.user_id = paragraph.user_id
+      fragment.parent_id = paragraph.parent_id
       fragment.content = lastPart
+      fragment.split = false
       fragment.save
+
+      Paragraph.select { |p|
+        p.parent_id == paragraph.id
+      }.each { |p|
+        p.parent_id = fragment.id
+        p.save
+      }
 
       paragraph.next_id = fragment.id
       paragraph.content = firstPart

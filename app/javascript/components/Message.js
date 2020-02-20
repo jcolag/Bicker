@@ -7,7 +7,15 @@ class Message extends React.Component {
     super(props);
     this.state = {
       paragraphs: this.props.paragraphs,
+      result: {},
     }
+  }
+
+  updateParagraphs(data) {
+    this.setState({
+      result: data,
+    });
+    console.log(data);
   }
 
   render () {
@@ -15,6 +23,7 @@ class Message extends React.Component {
       p => <Paragraph
         avatar={p.avatar}
         beenseen={p.beenseen}
+        callback={this.updateParagraphs.bind(this)}
         children={p.children}
         content={p.content}
         indent={p.indent}

@@ -5,6 +5,7 @@ class ReplyForm extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
+      callback: this.props.callback,
       count: this.props.count,
       message: this.props.message,
       offset: this.props.offset,
@@ -12,18 +13,6 @@ class ReplyForm extends React.Component {
       pnumber: this.props.pnumber,
       text: this.props.punc,
     };
-  }
-
-  replyCallback(self, data) {
-    console.log(`Callback! ${data}`);
-    self.setState({
-      response: data,
-    }, self.setStateCallback);
-  }
-
-  setStateCallback(e) {
-    console.log("State has been set!");
-    console.log(e);
   }
 
   render () {
@@ -43,7 +32,7 @@ class ReplyForm extends React.Component {
             <br />
             <button
               offset={this.state.offset}
-              onClick={(e) => submitReply(e, this, this.replyCallback)}
+              onClick={(e) => submitReply(e, this, this.state.callback)}
               pid={this.state.pid}
               type="button"
             >
@@ -57,6 +46,7 @@ class ReplyForm extends React.Component {
 }
 
 ReplyForm.propTypes = {
+  callback: PropTypes.func,
   count: PropTypes.number,
   offset: PropTypes.number,
   pid: PropTypes.number,

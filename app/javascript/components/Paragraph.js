@@ -9,6 +9,7 @@ class Paragraph extends React.Component {
     this.state = {
       avatar: this.props.avatar,
       beenseen: this.props.beenseen,
+      callback: this.props.callback,
       children: this.props.children,
       content: this.props.content,
       count: this.props.count,
@@ -43,6 +44,7 @@ class Paragraph extends React.Component {
 
     if (punct.indexOf(text) >= 0) {
       return(<PuncButton
+        callback={this.state.callback}
         count={idx}
         key={idx}
         offset={offset}
@@ -106,6 +108,7 @@ class Paragraph extends React.Component {
     children.forEach(c => result.push(<Paragraph
       avatar={c.avatar}
       beenseen={c.beenseen}
+      callback={this.state.callback}
       children={c.children}
       content={c.content}
       indent={indent + 1}
@@ -178,6 +181,7 @@ class Paragraph extends React.Component {
 Paragraph.propTypes = {
   avatar: PropTypes.string,
   beenseen: PropTypes.bool,
+  callback: PropTypes.func,
   count: PropTypes.number,
   indent: PropTypes.number,
   pid: PropTypes.number,

@@ -41,8 +41,14 @@ class MessagesController < ApplicationController
 
     if pars.count == 0
       respond_to do |format|
-        format.html { redirect_to new_message_path, error: 'Message text is empty.' }
-        format.json { render json: [ "Message text is empty" ], status: :unprocessable_entity }
+        format.html {
+          redirect_to new_message_path,
+          error: 'Message text is empty.'
+        }
+        format.json {
+          render json: [ "Message text is empty" ],
+          status: :unprocessable_entity
+        }
       end
       return
     end
@@ -123,8 +129,15 @@ class MessagesController < ApplicationController
           end
         end
 
-        format.html { redirect_to @message, notice: 'Message was successfully created.' }
-        format.json { render :show, status: :created, location: @message }
+        format.html {
+          redirect_to @message,
+          notice: 'Message was successfully created.'
+        }
+        format.json {
+          render :show,
+          status: :created,
+          location: @message
+        }
       else
         @message = Message.new
         @content = pars.join("\n")
@@ -132,7 +145,10 @@ class MessagesController < ApplicationController
           .select { |c| c.of == 'message' }
           .collect { |c| [ c.name, c.id ] }
         format.html { render :new, notice: @message.errors }
-        format.json { render json: @message.errors, status: :unprocessable_entity }
+        format.json {
+          render json: @message.errors,
+          status: :unprocessable_entity
+        }
       end
     end
   end
@@ -142,11 +158,17 @@ class MessagesController < ApplicationController
   def update
     respond_to do |format|
       if @message.update(message_params)
-        format.html { redirect_to @message, notice: 'Message was successfully updated.' }
+        format.html {
+          redirect_to @message,
+          notice: 'Message was successfully updated.'
+        }
         format.json { render :show, status: :ok, location: @message }
       else
         format.html { render :edit }
-        format.json { render json: @message.errors, status: :unprocessable_entity }
+        format.json {
+          render json: @message.errors,
+          status: :unprocessable_entity
+        }
       end
     end
   end
@@ -160,7 +182,10 @@ class MessagesController < ApplicationController
     ps.each { |p| p.destroy }
     @message.destroy
     respond_to do |format|
-      format.html { redirect_to messages_url, notice: 'Message was successfully destroyed.' }
+      format.html {
+        redirect_to messages_url,
+        notice: 'Message was successfully destroyed.'
+      }
       format.json { head :no_content }
     end
   end
@@ -175,7 +200,8 @@ class MessagesController < ApplicationController
       @message = Message.find(params[:id])
     end
 
-    # Never trust parameters from the scary internet, only allow the white list through.
+    # Never trust parameters from the scary internet,
+    # only allow the white list through.
     def message_params
        params
          .require(:message)

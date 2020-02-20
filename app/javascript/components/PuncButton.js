@@ -6,6 +6,7 @@ class PuncButton extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
+      callback: this.props.callback,
       count: this.props.count,
       offset: this.props.offset,
       pid: this.props.pid,
@@ -31,16 +32,17 @@ class PuncButton extends React.Component {
           title="Click to reply here"
         >
           <span
-            dangerouslySetInnerHTML={ html }
+            dangerouslySetInnerHTML={html}
             name={name}
             offset={this.state.offset}
           />
         </a>
         <ReplyForm
-          count={ this.state.count }
+          callback={this.state.callback}
+          count={this.state.count}
           offset={this.state.offset}
           pid={this.state.pid}
-          pnumber={ this.state.pnumber }
+          pnumber={this.state.pnumber}
         />
       </React.Fragment>
     );
@@ -48,6 +50,7 @@ class PuncButton extends React.Component {
 }
 
 PuncButton.propTypes = {
+  callback: PropTypes.func,
   count: PropTypes.number,
   offset: PropTypes.number,
   pid: PropTypes.number,
