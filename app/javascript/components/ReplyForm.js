@@ -15,6 +15,9 @@ class ReplyForm extends React.Component {
     };
   }
 
+  reportError(message) {
+  }
+
   render () {
     const id = `reply-form-${this.state.pnumber}-${this.state.count}`;
     return (
@@ -32,7 +35,11 @@ class ReplyForm extends React.Component {
             <br />
             <button
               offset={this.state.offset}
-              onClick={(e) => submitReply(e, this, this.state.callback)}
+              onClick={(e) => submitReply(
+                e,
+                this.state.callback,
+                this.reportError.bind(this)
+              )}
               pid={this.state.pid}
               type="button"
             >

@@ -31,7 +31,7 @@ function toggleReplyForm(e) {
   }
 }
 
-function submitReply(e, component, callback) {
+function submitReply(e, callback, reportError) {
   e.persist();
   var target = e.target;
   var offset = Number(target.attributes.offset.value);
@@ -59,7 +59,7 @@ function submitReply(e, component, callback) {
       puncBtn.classList.remove('toggled-punctuation-button');
       puncBtn.classList.add('punctuation-button');
       textarea.value = '';
-      callback(component, resp);
+      callback(reportError, resp);
     } else {
       console.error(this);
     }

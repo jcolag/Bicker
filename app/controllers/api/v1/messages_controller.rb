@@ -125,15 +125,9 @@ class Api::V1::MessagesController < Api::V1::BaseController
       end
     end
 
-    args = {
-      after: fragment,
-      before: paragraph,
-      children: children,
-      message: params[:message],
-      offset: params[:offset],
-      paraId: params[:paraId],
-    }
-    respond_with args
+    result = Message.getParagraphs current_user, helpers, paragraph.message_id, nil
+    result = Message.unrollParagraphs result
+    respond_with result
   end
 
   private

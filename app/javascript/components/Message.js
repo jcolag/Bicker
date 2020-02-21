@@ -11,11 +11,15 @@ class Message extends React.Component {
     }
   }
 
-  updateParagraphs(data) {
+  updateParagraphs(reportError, data) {
+    const paragraphs = JSON.parse(data);
+
     this.setState({
-      result: data,
+      paragraphs: [],
     });
-    console.log(data);
+    this.setState({
+      paragraphs: paragraphs,
+    });
   }
 
   render () {
