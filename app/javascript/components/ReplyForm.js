@@ -7,7 +7,7 @@ class ReplyForm extends React.Component {
     this.state = {
       callback: this.props.callback,
       count: this.props.count,
-      message: this.props.message,
+      errorMessage: '',
       offset: this.props.offset,
       pid: this.props.pid,
       pnumber: this.props.pnumber,
@@ -16,6 +16,9 @@ class ReplyForm extends React.Component {
   }
 
   reportError(message) {
+    this.setState({
+      errorMessage: message,
+    });
   }
 
   render () {
@@ -27,6 +30,9 @@ class ReplyForm extends React.Component {
           className="reply-form"
         >
           <div>
+            <p className="error-message">
+              {this.state.errorMessage}
+            </p>
             <textarea
               cols="80"
               placeholder="It's important to be kind when replying..."

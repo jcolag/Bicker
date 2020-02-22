@@ -3,6 +3,10 @@ class Message < ApplicationRecord
   belongs_to :user
   validates :subject, :presence => true
 
+  def self.split_paragraphs msg
+    msg.split(/[\r\n]/).select { |line| line.length > 0 }
+  end
+
   def self.unrollParagraphs paragraphs
     if paragraphs.count == 0
       return Array.new

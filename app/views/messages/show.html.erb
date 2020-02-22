@@ -37,7 +37,7 @@ function submitReply(e, callback, reportError) {
   var offset = Number(target.attributes.offset.value);
   var paraId = Number(target.attributes.pid.value);
   var parent = target.parentNode;
-  var textarea = parent.childNodes[0];
+  var textarea = parent.childNodes[1];
   var form = parent.parentNode;
   var linkName = form.attributes.id.value.replace('reply-form-', '');
   var matches = document.getElementsByName(linkName);
@@ -61,12 +61,12 @@ function submitReply(e, callback, reportError) {
       textarea.value = '';
       callback(reportError, resp);
     } else {
-      console.error(this);
+      reportError(this.response);
     }
   };
 
   request.onerror = function() {
-    // There was a connection error of some sort
+    reportError('There was a connection error.');
   };
 
   request.send();

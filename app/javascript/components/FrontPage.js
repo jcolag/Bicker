@@ -4,10 +4,10 @@ class FrontPage extends React.Component {
   render () {
     return (
       <React.Fragment>
-        <div class="block">
-	        <header class="header-group">
+        <div className="block">
+	        <header className="header-group">
 	          <img
-	            class="main-logo"
+	            className="main-logo"
 	            src={this.props.logo}
 	          />
 	        </header>
@@ -15,7 +15,7 @@ class FrontPage extends React.Component {
 	          <p>
 	            Welcome to <b>{ this.props.name }</b>!
 	          </p>
-	          <p>
+	          <span>
 	            <b>{ this.props.name }</b> is an attempt to change
 	            communications for the better by building on the
 	            lessons of the past.  Among other things, you can
@@ -52,7 +52,7 @@ class FrontPage extends React.Component {
 	            Multiple respondants saying exactly the same thing should
 	            <i>absolutely</i> be a thing of the past.  That&rsquo;s
 	            the past.
-	          </p>
+	          </span>
 	          <p>
 	            <b>{ this.props.name }</b> is the future.  Well,
 	            it&rsquo;s actually just one potential future of

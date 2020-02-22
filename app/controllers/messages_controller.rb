@@ -34,7 +34,7 @@ class MessagesController < ApplicationController
   # POST /messages.json
   def create
     params = message_params
-    pars = split_paragraphs(params)
+    pars = Message.split_paragraphs(params[:content])
     msg = params.except(:content)
     prev_par = nil
     block_par = nil
@@ -212,10 +212,6 @@ class MessagesController < ApplicationController
            :user_id,
            :category_id
          )
-    end
-
-    def split_paragraphs msg
-      msg[:content].split(/[\r\n]/).select { |line| line.length > 0 }
     end
 
     def sortParagraph pars, start = nil, found = []

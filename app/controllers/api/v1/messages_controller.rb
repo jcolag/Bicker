@@ -26,11 +26,7 @@ class Api::V1::MessagesController < Api::V1::BaseController
     lastPart = paragraph.content[offset + 1..-1].strip
 
     if message.length == 0
-      args = {
-        message:  "Reply message is empty",
-        status:  "ERROR"
-      }
-      respond_with args
+      respond_with 'Reply message is empty'
       return
     end
 
@@ -58,7 +54,7 @@ class Api::V1::MessagesController < Api::V1::BaseController
       paragraph.save
     end
 
-    rpars = split_paragraphs message
+    rpars = Message.split_paragraphs message
     block_par = nil
     prev_par = nil
     children = []
@@ -131,10 +127,6 @@ class Api::V1::MessagesController < Api::V1::BaseController
   end
 
   private
-
-  def split_paragraphs msg
-    msg.split(/[\r\n]/).select { |line| line.length > 0 }
-  end
 
   def message_params
     params.require(:message).permit(:id, :name, :description)

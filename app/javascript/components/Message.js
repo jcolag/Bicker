@@ -12,14 +12,22 @@ class Message extends React.Component {
   }
 
   updateParagraphs(reportError, data) {
-    const paragraphs = JSON.parse(data);
+    try {
+      const paragraphs = JSON.parse(data);
 
-    this.setState({
-      paragraphs: [],
-    });
-    this.setState({
-      paragraphs: paragraphs,
-    });
+      if (Array.isArray(paragraphs)) {
+        this.setState({
+          paragraphs: [],
+        });
+        this.setState({
+          paragraphs: paragraphs,
+        });
+      } else {
+        reportError(paragraphs);
+      }
+    } catch {
+      reportError(data);
+    }
   }
 
   render () {
