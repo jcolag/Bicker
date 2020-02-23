@@ -176,10 +176,7 @@ class MessagesController < ApplicationController
   # DELETE /messages/1
   # DELETE /messages/1.json
   def destroy
-    ps = sortParagraph Paragraph.select { |p|
-      p.message_id == @message.id and p.parent_id.nil?
-    }
-    ps.each { |p| p.destroy }
+    delete_paragraphs @message.id
     @message.destroy
     respond_to do |format|
       format.html {
@@ -195,6 +192,17 @@ class MessagesController < ApplicationController
   end
 
   private
+    def delete_paragraphs message, parent = nil
+      ps = sortParagraph Paragraph.select { |p|
+        p.message_id == message and p.parent_id == parent
+      }
+      ps.each do |p|
+        delete_paragraphs message, p.id
+        Beenseen.select { |b| b.paragraph_id == p.id }.each { |b| b.destroy }
+        p.destroy
+      end
+    end
+
     # Use callbacks to share common setup or constraints between actions.
     def set_message
       @message = Message.find(params[:id])
@@ -216,31 +224,18 @@ class MessagesController < ApplicationController
 
     def sortParagraph pars, start = nil, found = []
       return found if pars.length == 0
-      if !start
-        which = nil
-        while pars.length > 0
-          pars.each_index do |i|
-            if pars[i].next_id == which
-              p = pars.delete_at(i)
-              which = p.id
-              found.unshift(p)
-              break
-            end
+      which = nil
+      while pars.length > 0
+        pars.each_index do |i|
+          if pars[i].next_id == which
+            p = pars.delete_at(i)
+            which = p.id
+            found.unshift(p)
+            break
           end
         end
-        return found
       end
-      which = nil
-      pars.each_index do |i|
-        if pars[i].id == start
-          which = i
-          break
-        end
-      end
-      return found if !which
-      p = pars.delete_at(which)
-      found << p
-      return sortParagraph(pars, found.last.next_id, found)
+      return found
     end
 end
 
