@@ -1,3 +1,4 @@
+# rubocop:todo Style/Documentation
 class RemoveFieldsFromUser < ActiveRecord::Migration[6.0]
   def change
     remove_column :users, :email
@@ -7,3 +8,4 @@ class RemoveFieldsFromUser < ActiveRecord::Migration[6.0]
     remove_column :users, :remember_token_expires_at
   end
 end
+# rubocop:enable Style/Documentation

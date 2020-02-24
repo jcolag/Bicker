@@ -1,8 +1,8 @@
-class SiteController < ApplicationController
+class SiteController < ApplicationController # rubocop:todo Style/Documentation
   def index
     @props = {
       logo: '/images/Bicker-logo.svg',
-      name: 'Bicker',
+      name: 'Bicker'
     }
   end
 end

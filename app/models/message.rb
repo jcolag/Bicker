@@ -1,24 +1,24 @@
-class Message < ApplicationRecord
+# rubocop:todo Style/Documentation
+class Message < ApplicationRecord # rubocop:todo Metrics/ClassLength
   belongs_to :category
   belongs_to :user
-  validates :subject, :presence => true
+  validates :subject, presence: true
 
-  def self.split_paragraphs msg
+  def self.split_paragraphs(msg)
     msg.split(/[\r\n]/).select { |line| line.length > 0 }
   end
 
-  def self.unrollParagraphs paragraphs
-    if paragraphs.count == 0
-      return Array.new
-    end
+  # rubocop:todo Naming/MethodName
+  # rubocop:todo Metrics/MethodLength
+  def self.unrollParagraphs(paragraphs) # rubocop:todo Metrics/AbcSize
+    return [] if paragraphs.count == 0
+
     last = paragraphs.select { |p| p.next_id.nil? }
     lastp = last.first
-    if lastp.children.count > 0
-      lastp.children = unrollParagraphs lastp.children
-    end
+    lastp.children = unrollParagraphs lastp.children if lastp.children.count > 0
     paragraphs.delete lastp
     plist = Array.new(1, lastp)
-    while paragraphs.count > 0 do
+    while paragraphs.count > 0
       nextl = paragraphs.select { |p| p.next_id == lastp.id }
       nextp = nextl.first
       paragraphs.delete nextp
@@ -30,26 +30,32 @@ class Message < ApplicationRecord
     end
     plist.reverse
   end
+  # rubocop:enable Metrics/MethodLength
+  # rubocop:enable Naming/MethodName
 
-  def self.getParagraphs who, helpers, message, parent
+  # rubocop:todo Naming/MethodName
+  # rubocop:todo Metrics/MethodLength
+  # rubocop:todo Metrics/AbcSize
+  def self.getParagraphs(who, helpers, message, parent)
     result = []
-    paragraphs = Paragraph.select { |p|
-      p.message_id == message and p.parent_id == parent
-    }.map { |p, count|
-      seen = Beenseen.select { |s|
-        s.paragraph_id == p.id and s.user_id == who.id
-      }
+    # rubocop:todo Metrics/BlockLength
+    paragraphs = Paragraph.select do |p|
+      (p.message_id == message) && (p.parent_id == parent)
+    end.map do |p, count|
+      seen = Beenseen.select do |s|
+        (s.paragraph_id == p.id) && (s.user_id == who.id)
+      end
       if seen.count == 0
-        see = Beenseen.new()
+        see = Beenseen.new
         see.user_id = who.id
         see.paragraph_id = p.id
         see.save
       end
       user = User.select { |u| u.id == p.user_id }.first
-      pp = ClientParagraph.new()
+      pp = ClientParagraph.new
       p = formatParagraph p
       pp.avatar = helpers.avatar 100, user
-      pp.beenseen = seen.count > 0 ? true : false
+      pp.beenseen = seen.count > 0
       pp.children = getParagraphs who, helpers, message, p.id
       pp.content = p.content
       pp.count = count
@@ -64,33 +70,39 @@ class Message < ApplicationRecord
       pp.when = helpers.time_ago_in_words(p.created_at)
       pp.who = user
       result.push pp
-    }
+    end
+    # rubocop:enable Metrics/BlockLength
     result
   end
+  # rubocop:enable Metrics/AbcSize
+  # rubocop:enable Metrics/MethodLength
+  # rubocop:enable Naming/MethodName
 
-  def self.formatParagraph paragraph
-    if paragraph.nil?
-      return
-    end
+  # rubocop:todo Metrics/PerceivedComplexity
+  # rubocop:todo Metrics/CyclomaticComplexity
+  # rubocop:todo Naming/MethodName
+  # rubocop:todo Metrics/MethodLength
+  def self.formatParagraph(paragraph) # rubocop:todo Metrics/AbcSize
+    return if paragraph.nil?
 
     rend = Redcarpet::Render::HTML.new(
       escape_html: true,
       hard_wrap: true,
       prettify: true,
       safe_links_only: true,
-      with_toc_data: true,
+      with_toc_data: true
     )
     mark = Redcarpet::Markdown.new(rend, extensions = {
-      :autolink => true,
-      :disable_indented_code_blocks => true,
-      :fenced_code_blocks => true,
-      :footnotes => true,
-      :strikethrough => true,
-      :superscript => true,
-      :tables => true,
-      :underline => true,
-    })
-    if paragraph.content.starts_with?('```') or
+                                     autolink: true,
+                                     disable_indented_code_blocks: true,
+                                     fenced_code_blocks: true,
+                                     footnotes: true,
+                                     strikethrough: true,
+                                     superscript: true,
+                                     tables: true,
+                                     underline: true
+                                   })
+    if paragraph.content.starts_with?('```') ||
        paragraph.content.starts_with?('~~~')
       paragraph.content = mark.render paragraph.content
       return paragraph
@@ -100,30 +112,30 @@ class Message < ApplicationRecord
       paragraph.content = '#' + paragraph.content
     end
     content = paragraph.content
-    escaped = CGI::escapeHTML content
+    escaped = CGI.escapeHTML content
     escaped.gsub! '&quot;', '"'
     escaped.gsub! '&#39;', "'"
     punct = RubyPants.new(escaped, 3).to_html
     html = mark.render punct
     content = html
-      .sub('<p>', '')
-      .reverse.sub('</p>'.reverse, '')
-      .reverse
-    if !content.starts_with?('<code>') and
-       !content.starts_with?('<table>') and
+              .sub('<p>', '')
+              .reverse.sub('</p>'.reverse, '')
+              .reverse
+    if !content.starts_with?('<code>') &&
+       !content.starts_with?('<table>') &&
        !content.starts_with?(/<h[1-6]/)
       content = content
-        .gsub(
-          /(\.|,|!|\?|:|\(|\)|&|;|\/|&ndash;|&mdash;|&hellip;)/m,
-          "\n".concat('\1').concat("\n")
-        )
-        .gsub(/(<a [^<]*<[^>]*>|<[^>]*>|&[A-Za-z]*;|&\n*#[0-9]*\n*;)/) { |match|
-          match.gsub(/\n/) { |inner| "" }
-        }
-        .split("\n")
+                .gsub(
+                  %r{(\.|,|!|\?|:|\(|\)|&|;|/|&ndash;|&mdash;|&hellip;)}m,
+                  "\n".concat('\1').concat("\n")
+                )
+                .gsub(/(<a [^<]*<[^>]*>|<[^>]*>|&[A-Za-z]*;|&\n*#[0-9]*\n*;)/) do |match|
+        match.gsub(/\n/) { |_inner| '' }
+      end
+                .split("\n")
       if paragraph.split
         if content.count == 1
-          content += " "
+          content += ' '
         else
           # It looks like we should test that the last element of
           # the array is punctuation, but since this paragraph has
@@ -135,8 +147,13 @@ class Message < ApplicationRecord
       end
       paragraph.content = content
     else
-      paragraph.content = [ paragraph.content ];
+      paragraph.content = [paragraph.content]
     end
     paragraph
   end
+  # rubocop:enable Metrics/MethodLength
+  # rubocop:enable Naming/MethodName
+  # rubocop:enable Metrics/CyclomaticComplexity
+  # rubocop:enable Metrics/PerceivedComplexity
 end
+# rubocop:enable Style/Documentation

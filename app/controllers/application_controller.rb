@@ -1,3 +1,4 @@
+# rubocop:todo Style/Documentation
 class ApplicationController < ActionController::Base
   before_action :configure_permitted_parameters, if: :devise_controller?
   protect_from_forgery with: :null_session
@@ -9,7 +10,8 @@ class ApplicationController < ActionController::Base
   protected
 
   def configure_permitted_parameters
-    devise_parameter_sanitizer.permit(:sign_up, keys: [:login, :email, :password])
-    devise_parameter_sanitizer.permit(:account_update, keys: [:login, :email, :password, :current_password])
-  end 
+    devise_parameter_sanitizer.permit(:sign_up, keys: %i[login email password])
+    devise_parameter_sanitizer.permit(:account_update, keys: %i[login email password current_password])
+  end
 end
+# rubocop:enable Style/Documentation

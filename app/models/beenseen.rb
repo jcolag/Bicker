@@ -1,4 +1,4 @@
-class Beenseen < ApplicationRecord
+class Beenseen < ApplicationRecord # rubocop:todo Style/Documentation
   belongs_to :user
   belongs_to :paragraph
 end
