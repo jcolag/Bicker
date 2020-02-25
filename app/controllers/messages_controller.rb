@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'redcarpet'
 require 'rubypants'
 
@@ -43,7 +45,7 @@ class MessagesController < ApplicationController
     prev_par = nil
     block_par = nil
 
-    if pars.count == 0
+    if pars.empty?
       respond_to do |format|
         format.html do
           redirect_to new_message_path,
@@ -212,7 +214,7 @@ class MessagesController < ApplicationController
     # rubocop:enable Lint/AmbiguousBlockAssociation
     ps.each do |p|
       delete_paragraphs message, p.id
-      Beenseen.select { |b| b.paragraph_id == p.id }.each { |b| b.destroy }
+      Beenseen.select { |b| b.paragraph_id == p.id }.each(&:destroy)
       p.destroy
     end
   end
@@ -239,10 +241,10 @@ class MessagesController < ApplicationController
   # rubocop:todo Naming/MethodName
   # rubocop:todo Metrics/MethodLength
   def sortParagraph(pars, _start = nil, found = [])
-    return found if pars.length == 0
+    return found if pars.empty?
 
     which = nil
-    while pars.length > 0
+    until pars.empty?
       pars.each_index do |i|
         next unless pars[i].next_id == which
 

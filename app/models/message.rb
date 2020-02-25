@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # rubocop:todo Style/Documentation
 class Message < ApplicationRecord # rubocop:todo Metrics/ClassLength
   belongs_to :category
@@ -5,24 +7,26 @@ class Message < ApplicationRecord # rubocop:todo Metrics/ClassLength
   validates :subject, presence: true
 
   def self.split_paragraphs(msg)
-    msg.split(/[\r\n]/).select { |line| line.length > 0 }
+    msg.split(/[\r\n]/).reject(&:empty?)
   end
 
   # rubocop:todo Naming/MethodName
   # rubocop:todo Metrics/MethodLength
   def self.unrollParagraphs(paragraphs) # rubocop:todo Metrics/AbcSize
-    return [] if paragraphs.count == 0
+    return [] if paragraphs.empty?
 
     last = paragraphs.select { |p| p.next_id.nil? }
     lastp = last.first
-    lastp.children = unrollParagraphs lastp.children if lastp.children.count > 0
+    unless lastp.children.empty?
+      lastp.children = unrollParagraphs lastp.children
+    end
     paragraphs.delete lastp
     plist = Array.new(1, lastp)
-    while paragraphs.count > 0
+    until paragraphs.empty?
       nextl = paragraphs.select { |p| p.next_id == lastp.id }
       nextp = nextl.first
       paragraphs.delete nextp
-      if nextp.children.count > 0
+      unless nextp.children.empty?
         nextp.children = unrollParagraphs nextp.children
       end
       plist.push nextp
@@ -41,11 +45,12 @@ class Message < ApplicationRecord # rubocop:todo Metrics/ClassLength
     # rubocop:todo Metrics/BlockLength
     paragraphs = Paragraph.select do |p|
       (p.message_id == message) && (p.parent_id == parent)
-    end.map do |p, count|
+    end
+    paragraphs.map do |p, count|
       seen = Beenseen.select do |s|
         (s.paragraph_id == p.id) && (s.user_id == who.id)
       end
-      if seen.count == 0
+      if seen.empty?
         see = Beenseen.new
         see.user_id = who.id
         see.paragraph_id = p.id
@@ -55,7 +60,7 @@ class Message < ApplicationRecord # rubocop:todo Metrics/ClassLength
       pp = ClientParagraph.new
       p = formatParagraph p
       pp.avatar = helpers.avatar 100, user
-      pp.beenseen = seen.count > 0
+      pp.beenseen = !seen.empty?
       pp.children = getParagraphs who, helpers, message, p.id
       pp.content = p.content
       pp.count = count
@@ -92,7 +97,7 @@ class Message < ApplicationRecord # rubocop:todo Metrics/ClassLength
       safe_links_only: true,
       with_toc_data: true
     )
-    mark = Redcarpet::Markdown.new(rend, extensions = {
+    mark = Redcarpet::Markdown.new(rend, {
                                      autolink: true,
                                      disable_indented_code_blocks: true,
                                      fenced_code_blocks: true,
@@ -119,7 +124,7 @@ class Message < ApplicationRecord # rubocop:todo Metrics/ClassLength
     html = mark.render punct
     content = html
               .sub('<p>', '')
-              .reverse.sub('</p>'.reverse, '')
+              .reverse.sub('</p>'.dup.reverse, '')
               .reverse
     if !content.starts_with?('<code>') &&
        !content.starts_with?('<table>') &&
@@ -127,9 +132,11 @@ class Message < ApplicationRecord # rubocop:todo Metrics/ClassLength
       content = content
                 .gsub(
                   %r{(\.|,|!|\?|:|\(|\)|&|;|/|&ndash;|&mdash;|&hellip;)}m,
-                  "\n".concat('\1').concat("\n")
+                  "\n".dup.concat('\1').concat("\n")
                 )
-                .gsub(/(<a [^<]*<[^>]*>|<[^>]*>|&[A-Za-z]*;|&\n*#[0-9]*\n*;)/) do |match|
+                .gsub(
+                  /(<a [^<]*<[^>]*>|<[^>]*>|&[A-Za-z]*;|&\n*#[0-9]*\n*;)/
+                ) do |match|
         match.gsub(/\n/) { |_inner| '' }
       end
                 .split("\n")

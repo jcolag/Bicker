@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # rubocop:todo Style/Documentation
 class CreateTags < ActiveRecord::Migration[6.0]
   def change

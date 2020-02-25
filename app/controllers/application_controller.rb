@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # rubocop:todo Style/Documentation
 class ApplicationController < ActionController::Base
   before_action :configure_permitted_parameters, if: :devise_controller?
@@ -11,7 +13,10 @@ class ApplicationController < ActionController::Base
 
   def configure_permitted_parameters
     devise_parameter_sanitizer.permit(:sign_up, keys: %i[login email password])
-    devise_parameter_sanitizer.permit(:account_update, keys: %i[login email password current_password])
+    devise_parameter_sanitizer.permit(
+      :account_update,
+      keys: %i[login email password current_password]
+    )
   end
 end
 # rubocop:enable Style/Documentation

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Paragraph < ApplicationRecord # rubocop:todo Style/Documentation
   belongs_to :message
   belongs_to :parent, optional: true

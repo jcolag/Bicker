@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class Ability
+class Ability # rubocop:todo Style/Documentation
   include CanCan::Ability
 
   def initialize(user)
@@ -31,8 +31,8 @@ class Ability
     # If you pass :all it will apply to every resource. Otherwise pass a Ruby
     # class of the resource.
     #
-    # The third argument is an optional hash of conditions to further filter the
-    # objects.
+    # The third argument is an optional hash of conditions to further filter
+    # the objects.
     # For example, here the user can only update published articles.
     #
     #   can :update, Article, :published => true
