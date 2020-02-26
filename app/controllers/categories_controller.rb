@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-# rubocop:todo Style/Documentation
+# Controller for categories
 class CategoriesController < ApplicationController
   before_action :authenticate_user!, except: %i[index show]
   before_action :set_category, only: %i[show edit update destroy]
@@ -29,7 +29,7 @@ class CategoriesController < ApplicationController
 
   # POST /categories
   # POST /categories.json
-  def create # rubocop:todo Metrics/MethodLength
+  def create
     @category = Category.new(category_params)
 
     respond_to do |format|
@@ -51,7 +51,7 @@ class CategoriesController < ApplicationController
 
   # PATCH/PUT /categories/1
   # PATCH/PUT /categories/1.json
-  def update # rubocop:todo Metrics/MethodLength
+  def update
     respond_to do |format|
       if @category.update(category_params)
         format.html do
@@ -95,4 +95,3 @@ class CategoriesController < ApplicationController
     params.fetch(:category, {}).permit(:name, :of, :category_id)
   end
 end
-# rubocop:enable Style/Documentation

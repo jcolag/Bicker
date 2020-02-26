@@ -1,4 +1,5 @@
 # frozen_string_literal: true
 
-module CategoriesHelper # rubocop:todo Style/Documentation
+# A helper for the categories controller
+module CategoriesHelper
 end

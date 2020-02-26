@@ -2,7 +2,8 @@
 
 require 'libravatar'
 
-module ApplicationHelper # rubocop:todo Style/Documentation
+# Helper functions for the application
+module ApplicationHelper
   def boostrap_class(alert)
     {
       success: 'alert-success',
@@ -14,7 +15,7 @@ module ApplicationHelper # rubocop:todo Style/Documentation
     }[alert.to_sym]
   end
 
-  def flash_messages(_opts = {}) # rubocop:todo Metrics/MethodLength
+  def flash_messages(_opts = {})
     flash.each do |msg_type, message|
       concat(content_tag(
         :div,
@@ -41,24 +42,22 @@ module ApplicationHelper # rubocop:todo Style/Documentation
     nil
   end
 
-  # rubocop:todo Naming/MethodParameterName
-  def avatar(sz = 50, user = current_user) # rubocop:todo Metrics/MethodLength
+  def avatar(size = 50, user = current_user)
     libra = if user.nil?
               Libravatar.new({
                                email: 'nobody@nowhere.invalid',
-                               size: sz,
+                               size: size,
                                https: true,
                                default: 'robohash'
                              })
             else
               Libravatar.new({
                                email: user.email,
-                               size: sz,
+                               size: size,
                                https: true,
                                default: 'robohash'
                              })
             end
     libra.to_s
   end
-  # rubocop:enable Naming/MethodParameterName
 end

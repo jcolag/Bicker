@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
-# rubocop:todo Style/Documentation
-class Message < ApplicationRecord # rubocop:todo Metrics/ClassLength
+# Model for message objects
+class Message < ApplicationRecord
   belongs_to :category
   belongs_to :user
   validates :subject, presence: true
@@ -10,103 +10,63 @@ class Message < ApplicationRecord # rubocop:todo Metrics/ClassLength
     msg.split(/[\r\n]/).reject(&:empty?)
   end
 
-  # rubocop:todo Naming/MethodName
-  # rubocop:todo Metrics/MethodLength
-  def self.unrollParagraphs(paragraphs) # rubocop:todo Metrics/AbcSize
+  def self.unroll_paragraphs(paragraphs)
     return [] if paragraphs.empty?
 
-    last = paragraphs.select { |p| p.next_id.nil? }
-    lastp = last.first
-    unless lastp.children.empty?
-      lastp.children = unrollParagraphs lastp.children
-    end
-    paragraphs.delete lastp
+    paragraphs, lastp = get_next paragraphs, nil
     plist = Array.new(1, lastp)
     until paragraphs.empty?
-      nextl = paragraphs.select { |p| p.next_id == lastp.id }
-      nextp = nextl.first
-      paragraphs.delete nextp
-      unless nextp.children.empty?
-        nextp.children = unrollParagraphs nextp.children
-      end
+      paragraphs, nextp = get_next paragraphs, lastp.id
       plist.push nextp
       lastp = nextp
     end
     plist.reverse
   end
-  # rubocop:enable Metrics/MethodLength
-  # rubocop:enable Naming/MethodName
 
-  # rubocop:todo Naming/MethodName
-  # rubocop:todo Metrics/MethodLength
-  # rubocop:todo Metrics/AbcSize
-  def self.getParagraphs(who, helpers, message, parent)
-    result = []
-    # rubocop:todo Metrics/BlockLength
-    paragraphs = Paragraph.select do |p|
-      (p.message_id == message) && (p.parent_id == parent)
+  def self.get_next(paragraphs, next_id)
+    list = paragraphs.select { |p| p.next_id == next_id }
+    first = list.first
+    unless first.children.empty?
+      first.children = unroll_paragraphs first.children
     end
+    paragraphs.delete first
+    [paragraphs, first]
+  end
+
+  def self.get_paragraphs(who, helpers, message, parent)
+    result = []
+    paragraphs = Paragraph.select { |p| by_parent p, message, parent }
     paragraphs.map do |p, count|
-      seen = Beenseen.select do |s|
-        (s.paragraph_id == p.id) && (s.user_id == who.id)
-      end
-      if seen.empty?
-        see = Beenseen.new
-        see.user_id = who.id
-        see.paragraph_id = p.id
-        see.save
-      end
-      user = User.select { |u| u.id == p.user_id }.first
-      pp = ClientParagraph.new
-      p = formatParagraph p
-      pp.avatar = helpers.avatar 100, user
-      pp.beenseen = !seen.empty?
-      pp.children = getParagraphs who, helpers, message, p.id
-      pp.content = p.content
-      pp.count = count
-      pp.created_at = p.created_at
-      pp.id = p.id
-      pp.message_id = p.message_id
-      pp.next_id = p.next_id
-      pp.parent_id = p.parent_id
-      pp.ts = p.created_at.to_formatted_s(:db)
-      pp.updated_at = p.updated_at
-      pp.user_id = p.user_id
-      pp.when = helpers.time_ago_in_words(p.created_at)
-      pp.who = user
+      seen = see_paragraph p.id, who.id
+      p = format_paragraph p
+      pp = ClientParagraph.new helpers, p, seen, count
+      pp.children = get_paragraphs who, helpers, message, p.id
       result.push pp
     end
-    # rubocop:enable Metrics/BlockLength
     result
   end
-  # rubocop:enable Metrics/AbcSize
-  # rubocop:enable Metrics/MethodLength
-  # rubocop:enable Naming/MethodName
 
-  # rubocop:todo Metrics/PerceivedComplexity
-  # rubocop:todo Metrics/CyclomaticComplexity
-  # rubocop:todo Naming/MethodName
-  # rubocop:todo Metrics/MethodLength
-  def self.formatParagraph(paragraph) # rubocop:todo Metrics/AbcSize
+  def self.by_parent(paragraph, message, parent)
+    paragraph.message_id == message && paragraph.parent_id == parent
+  end
+
+  def self.see_paragraph(paragraph, who)
+    seen = Beenseen.select do |s|
+      (s.paragraph_id == paragraph) && (s.user_id == who)
+    end
+    if seen.empty?
+      see = Beenseen.new
+      see.user_id = who
+      see.paragraph_id = paragraph
+      see.save
+    end
+    seen
+  end
+
+  def self.format_paragraph(paragraph)
     return if paragraph.nil?
 
-    rend = Redcarpet::Render::HTML.new(
-      escape_html: true,
-      hard_wrap: true,
-      prettify: true,
-      safe_links_only: true,
-      with_toc_data: true
-    )
-    mark = Redcarpet::Markdown.new(rend, {
-                                     autolink: true,
-                                     disable_indented_code_blocks: true,
-                                     fenced_code_blocks: true,
-                                     footnotes: true,
-                                     strikethrough: true,
-                                     superscript: true,
-                                     tables: true,
-                                     underline: true
-                                   })
+    mark = initialize_formatting
     if paragraph.content.starts_with?('```') ||
        paragraph.content.starts_with?('~~~')
       paragraph.content = mark.render paragraph.content
@@ -158,9 +118,58 @@ class Message < ApplicationRecord # rubocop:todo Metrics/ClassLength
     end
     paragraph
   end
-  # rubocop:enable Metrics/MethodLength
-  # rubocop:enable Naming/MethodName
-  # rubocop:enable Metrics/CyclomaticComplexity
-  # rubocop:enable Metrics/PerceivedComplexity
+
+  def self.initialize_formatting
+    rend = Redcarpet::Render::HTML.new(
+      escape_html: true, hard_wrap: true, prettify: true,
+      safe_links_only: true, with_toc_data: true
+    )
+    Redcarpet::Markdown.new(rend, {
+                              disable_indented_code_blocks: true,
+                              fenced_code_blocks: true, footnotes: true,
+                              strikethrough: true, superscript: true,
+                              autolink: true, tables: true, underline: true
+                            })
+  end
 end
-# rubocop:enable Style/Documentation
+
+# A utility class to package paragraph information for the view
+class ClientParagraph
+  attr_accessor :avatar
+  attr_accessor :beenseen
+  attr_accessor :children
+  attr_accessor :content
+  attr_accessor :count
+  attr_accessor :created_at
+  attr_accessor :id
+  attr_accessor :message_id
+  attr_accessor :next_id
+  attr_accessor :parent_id
+  attr_accessor :ts
+  attr_accessor :updated_at
+  attr_accessor :user_id
+  attr_accessor :when
+  attr_accessor :who
+
+  def initialize(helpers, paragraph, seen, count)
+    user = User.select { |u| u.id == paragraph.user_id }.first
+    paragraph.attributes.keys.each do |k|
+      v = paragraph.attributes[k]
+      #instance_variable_set(k, v) unless v.nil?
+    end
+    self.avatar = helpers.avatar 100, user
+    self.beenseen = !seen.empty?
+    self.content = paragraph.content
+    self.count = count
+    self.created_at = paragraph.created_at
+    self.id = paragraph.id
+    self.message_id = paragraph.message_id
+    self.next_id = paragraph.next_id
+    self.parent_id = paragraph.parent_id
+    self.ts = paragraph.created_at.to_formatted_s(:db)
+    self.updated_at = paragraph.updated_at
+    self.user_id = paragraph.user_id
+    self.when = helpers.time_ago_in_words(paragraph.created_at)
+    self.who = user
+  end
+end

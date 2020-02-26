@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-# rubocop:todo Style/Documentation
+# Create the message table
 class CreateMessages < ActiveRecord::Migration[6.0]
   def change
     create_table :messages do |t|
@@ -13,4 +13,3 @@ class CreateMessages < ActiveRecord::Migration[6.0]
     end
   end
 end
-# rubocop:enable Style/Documentation

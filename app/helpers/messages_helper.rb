@@ -1,4 +1,5 @@
 # frozen_string_literal: true
 
-module MessagesHelper # rubocop:todo Style/Documentation
+# Helper functions for message objects
+module MessagesHelper
 end

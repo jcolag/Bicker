@@ -1,19 +1,14 @@
 # frozen_string_literal: true
 
-# rubocop:todo Style/Documentation
+# Create a tag table
 class CreateTags < ActiveRecord::Migration[6.0]
   def change
     create_table :tags do |t|
-      # rubocop:todo Lint/DuplicateHashKey
-      t.references :user, null: false, foreign_key: true, null: false
-      # rubocop:enable Lint/DuplicateHashKey
-      # rubocop:todo Lint/DuplicateHashKey
-      t.references :paragraph, null: false, foreign_key: true, null: false
-      # rubocop:enable Lint/DuplicateHashKey
+      t.references :user, null: false, foreign_key: true
+      t.references :paragraph, null: false, foreign_key: true
       t.string :word, null: false
 
       t.timestamps
     end
   end
 end
-# rubocop:enable Style/Documentation

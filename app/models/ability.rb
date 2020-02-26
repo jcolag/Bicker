@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
-class Ability # rubocop:todo Style/Documentation
+# Model for abilities
+class Ability
   include CanCan::Ability
 
   def initialize(user)

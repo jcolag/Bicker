@@ -1,9 +1,9 @@
 # frozen_string_literal: true
 
-# rubocop:todo Style/Documentation
-# rubocop:todo Metrics/ClassLength
+# API Namespace
 module Api
   module V1
+    # Controller for the Messages API
     class MessagesController < Api::V1::BaseController
       def index
         respond_with Message.all
@@ -23,10 +23,7 @@ module Api
         respond_with message, json: message
       end
 
-      # rubocop:todo Metrics/PerceivedComplexity
-      # rubocop:todo Metrics/MethodLength
-      # rubocop:todo Metrics/AbcSize
-      def reply # rubocop:todo Metrics/CyclomaticComplexity
+      def reply
         para_id = params[:paraId].to_i
         offset = params[:offset].to_i
         message = params[:message].strip
@@ -69,15 +66,14 @@ module Api
         prev_par = nil
         children = []
 
-        rpars.reverse_each do |p| # rubocop:todo Metrics/BlockLength
+        rpars.reverse_each do |p|
           if block_par.nil? &&
              (p.start_with?('```') ||
                p.start_with?('~~~') ||
                p.start_with?('|')
              )
             block_par = p + "\n"
-          elsif
-            ( # rubocop:todo Layout/ConditionPosition
+          elsif (
               !block_par.nil? &&
               block_par.start_with?('`') &&
               !p.start_with?('```') &&
@@ -131,16 +127,13 @@ module Api
           end
         end
 
-        result = Message.getParagraphs current_user,
-                                       helpers,
-                                       paragraph.message_id,
-                                       nil
-        result = Message.unrollParagraphs result
+        result = Message.get_paragraphs current_user,
+                                        helpers,
+                                        paragraph.message_id,
+                                        nil
+        result = Message.unroll_paragraphs result
         respond_with result
       end
-      # rubocop:enable Metrics/AbcSize
-      # rubocop:enable Metrics/MethodLength
-      # rubocop:enable Metrics/PerceivedComplexity
 
       private
 
@@ -150,5 +143,3 @@ module Api
     end
   end
 end
-# rubocop:enable Metrics/ClassLength
-# rubocop:enable Style/Documentation

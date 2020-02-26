@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-# rubocop:todo Style/Documentation
+# Create a table of which paragraphs have been seen by each user
 class CreateBeenseens < ActiveRecord::Migration[6.0]
   def change
     create_table :beenseens do |t|
@@ -13,4 +13,3 @@ class CreateBeenseens < ActiveRecord::Migration[6.0]
     end
   end
 end
-# rubocop:enable Style/Documentation

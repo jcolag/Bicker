@@ -1,8 +1,6 @@
 # frozen_string_literal: true
 
-# frozen_string_literal: true
-
-# rubocop:todo Style/Documentation
+# Add Devise gem information to the Users table
 class AddDeviseToUsers < ActiveRecord::Migration[6.0]
   def self.up
     change_table :users do |t|
@@ -53,4 +51,3 @@ class AddDeviseToUsers < ActiveRecord::Migration[6.0]
     raise ActiveRecord::IrreversibleMigration
   end
 end
-# rubocop:enable Style/Documentation

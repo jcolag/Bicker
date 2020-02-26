@@ -3,8 +3,7 @@
 require 'redcarpet'
 require 'rubypants'
 
-# rubocop:todo Style/Documentation
-# rubocop:todo Metrics/ClassLength
+# The message controller
 class MessagesController < ApplicationController
   before_action :authenticate_user!, except: %i[index show]
   before_action :set_message, only: %i[show edit update destroy]
@@ -18,8 +17,8 @@ class MessagesController < ApplicationController
   # GET /messages/1
   # GET /messages/1.json
   def show
-    paragraphs = Message.getParagraphs current_user, helpers, @message.id, nil
-    @paragraphs = Message.unrollParagraphs paragraphs
+    paragraphs = Message.get_paragraphs current_user, helpers, @message.id, nil
+    @paragraphs = Message.unroll_paragraphs paragraphs
   end
 
   # GET /messages/new
@@ -35,10 +34,7 @@ class MessagesController < ApplicationController
 
   # POST /messages
   # POST /messages.json
-  # rubocop:todo Metrics/PerceivedComplexity
-  # rubocop:todo Metrics/MethodLength
-  # rubocop:todo Metrics/AbcSize
-  def create # rubocop:todo Metrics/CyclomaticComplexity
+  def create
     params = message_params
     pars = Message.split_paragraphs(params[:content])
     msg = params.except(:content)
@@ -63,17 +59,16 @@ class MessagesController < ApplicationController
 
     @message = Message.new(msg)
 
-    respond_to do |format| # rubocop:todo Metrics/BlockLength
+    respond_to do |format|
       if @message.save
-        pars.reverse_each do |p| # rubocop:todo Metrics/BlockLength
+        pars.reverse_each do |p|
           if block_par.nil? &&
              (p.start_with?('```') ||
                p.start_with?('~~~') ||
                p.start_with?('|')
              )
             block_par = p + "\n"
-          elsif
-            ( # rubocop:todo Layout/ConditionPosition
+          elsif (
               !block_par.nil? &&
               block_par.start_with?('`') &&
               !p.start_with?('```') &&
@@ -91,14 +86,12 @@ class MessagesController < ApplicationController
               par = {
                 message_id: @message.id,
                 parent_id: nil,
-                # rubocop:todo Metrics/BlockNesting
                 next_id: prev_par ? prev_par.id : nil,
-                # rubocop:enable Metrics/BlockNesting
                 user_id: @message.user_id,
                 content: block_par
               }
               prev_par = Paragraph.new(par)
-              if prev_par.save # rubocop:todo Metrics/BlockNesting
+              if prev_par.save
                 Rails.logger.debug('Paragraph was successfully created.')
               else
                 Rails.logger.warn(prev_par.errors.to_yaml)
@@ -112,9 +105,7 @@ class MessagesController < ApplicationController
               par = {
                 message_id: @message.id,
                 parent_id: nil,
-                # rubocop:todo Metrics/BlockNesting
                 next_id: prev_par ? prev_par.id : nil,
-                # rubocop:enable Metrics/BlockNesting
                 user_id: @message.user_id,
                 content: lines
               }
@@ -122,9 +113,7 @@ class MessagesController < ApplicationController
               par = {
                 message_id: @message.id,
                 parent_id: nil,
-                # rubocop:todo Metrics/BlockNesting
                 next_id: prev_par ? prev_par.id : nil,
-                # rubocop:enable Metrics/BlockNesting
                 user_id: @message.user_id,
                 content: p
               }
@@ -162,13 +151,10 @@ class MessagesController < ApplicationController
       end
     end
   end
-  # rubocop:enable Metrics/AbcSize
-  # rubocop:enable Metrics/MethodLength
-  # rubocop:enable Metrics/PerceivedComplexity
 
   # PATCH/PUT /messages/1
   # PATCH/PUT /messages/1.json
-  def update # rubocop:todo Metrics/MethodLength
+  def update
     respond_to do |format|
       if @message.update(message_params)
         format.html do
@@ -207,11 +193,9 @@ class MessagesController < ApplicationController
   private
 
   def delete_paragraphs(message, parent = nil)
-    # rubocop:todo Lint/AmbiguousBlockAssociation
-    ps = sortParagraph Paragraph.select { |p|
+    ps = sort_paragraph(Paragraph.select do |p|
       (p.message_id == message) && (p.parent_id == parent)
-    }
-    # rubocop:enable Lint/AmbiguousBlockAssociation
+    end)
     ps.each do |p|
       delete_paragraphs message, p.id
       Beenseen.select { |b| b.paragraph_id == p.id }.each(&:destroy)
@@ -238,9 +222,7 @@ class MessagesController < ApplicationController
       )
   end
 
-  # rubocop:todo Naming/MethodName
-  # rubocop:todo Metrics/MethodLength
-  def sortParagraph(pars, _start = nil, found = [])
+  def sort_paragraph(pars, _start = nil, found = [])
     return found if pars.empty?
 
     which = nil
@@ -256,26 +238,4 @@ class MessagesController < ApplicationController
     end
     found
   end
-  # rubocop:enable Metrics/MethodLength
-  # rubocop:enable Naming/MethodName
-end
-# rubocop:enable Metrics/ClassLength
-# rubocop:enable Style/Documentation
-
-class ClientParagraph # rubocop:todo Style/Documentation
-  attr_accessor :avatar
-  attr_accessor :beenseen
-  attr_accessor :children
-  attr_accessor :content
-  attr_accessor :count
-  attr_accessor :created_at
-  attr_accessor :id
-  attr_accessor :message_id
-  attr_accessor :next_id
-  attr_accessor :parent_id
-  attr_accessor :ts
-  attr_accessor :updated_at
-  attr_accessor :user_id
-  attr_accessor :when
-  attr_accessor :who
 end

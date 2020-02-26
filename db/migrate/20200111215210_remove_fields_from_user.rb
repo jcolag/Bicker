@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-# rubocop:todo Style/Documentation
+# Remove useless/obsolete fields from the user model
 class RemoveFieldsFromUser < ActiveRecord::Migration[6.0]
   def change
     remove_column :users, :email
@@ -10,4 +10,3 @@ class RemoveFieldsFromUser < ActiveRecord::Migration[6.0]
     remove_column :users, :remember_token_expires_at
   end
 end
-# rubocop:enable Style/Documentation

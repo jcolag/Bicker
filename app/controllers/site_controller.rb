@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
-class SiteController < ApplicationController # rubocop:todo Style/Documentation
+# The site controller, obviously
+class SiteController < ApplicationController
   def index
     @props = {
       logo: '/images/Bicker-logo.svg',

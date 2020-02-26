@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
-class Paragraph < ApplicationRecord # rubocop:todo Style/Documentation
+# The model for paragraphs
+class Paragraph < ApplicationRecord
   belongs_to :message
   belongs_to :parent, optional: true
   belongs_to :next, optional: true
