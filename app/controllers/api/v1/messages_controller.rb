@@ -29,7 +29,11 @@ module Api
         message = params[:message].strip
         paragraph = Paragraph.find(para_id)
         first_part = paragraph.content[0..offset].strip
-        last_part = paragraph.content[offset + 1..-1].strip
+        last_part = if offset < paragraph.content.length
+                      paragraph.content[offset + 1..-1].strip
+                    else
+                      ''
+                    end
 
         if message.empty?
           respond_with 'Reply message is empty'

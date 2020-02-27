@@ -43,23 +43,29 @@ class Paragraph extends React.Component {
     ];
 
     if (punct.indexOf(text) >= 0) {
-      return(<PuncButton
-        callback={this.state.callback}
-        count={idx}
-        key={idx}
-        offset={offset}
-        pid={pid}
-        pnumber={pnumber}
-        punc={text}
-      />);
+      return([
+        <PuncButton
+          callback={this.state.callback}
+          count={idx}
+          key={idx}
+          offset={offset}
+          pid={pid}
+          pnumber={pnumber}
+          punc={text}
+        />,
+        1,
+      ]);
     } else {
-      return(<ClauseSpan
-        clause={text}
-        count={idx}
-        key={idx}
-        offset={offset}
-        pid={pid}
-      />);
+      return([
+        <ClauseSpan
+          clause={text}
+          count={idx}
+          key={idx}
+          offset={offset}
+          pid={pid}
+        />,
+        0,
+      ]);
     }
   }
 
@@ -84,13 +90,28 @@ class Paragraph extends React.Component {
       '&#8230;': 3,
     };
     let length = 0;
+    let marks = 0;
 
     contentArray.map(function (c, idx) {
       const corrlen = Object.prototype.hasOwnProperty.call(lengths, c) ?
         lengths[c] : c.length;
-      components.push(self.choose(c, idx, pid, pnumber, length));
+      const component = self.choose(c, idx, pid, pnumber, length);
+      marks += component[1];
+      components.push(component[0]);
       length += corrlen;
     });
+    if (marks === 0 && this.state.children.length === 0) {
+      const count = contentArray.length;
+      components.push(<PuncButton
+          callback={this.state.callback}
+          count={count}
+          key={count}
+          offset={length}
+          pid={pid}
+          pnumber={pnumber}
+          punc='&para'
+        />);
+    }
     return components;
   }
 
