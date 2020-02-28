@@ -27,6 +27,15 @@ module Api
         para_id = params[:paraId].to_i
         offset = params[:offset].to_i
         message = params[:message].strip
+        punctuation = params[:punctuation]
+
+        case punctuation
+        when '–', '…'
+          offset += 2
+        when '—'
+          offset += 1
+        end
+
         paragraph = Paragraph.find(para_id)
         first_part = paragraph.content[0..offset].strip
         last_part = if offset < paragraph.content.length

@@ -114,7 +114,7 @@ class Message < ApplicationRecord
       end
       paragraph.content = content
     else
-      paragraph.content = [paragraph.content]
+      paragraph.content = [content]
     end
     paragraph
   end

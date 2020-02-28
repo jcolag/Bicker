@@ -12,7 +12,24 @@ class ReplyForm extends React.Component {
       pid: this.props.pid,
       pnumber: this.props.pnumber,
       text: this.props.punc,
+      text_id: `textarea-${this.props.pnumber}-${this.props.count}`,
     };
+  }
+
+  componentDidMount() {
+    const simplemde = new SimpleMDE({
+      element: document.getElementById(this.state.text_id),
+      forceSync: true,
+      hideIcons: [
+        "heading",
+        "ordered-list",
+      ],
+      placeholder: "It's important to be kind when replying...",
+      showIcons: [
+        "code",
+        "strikethrough",
+      ],
+    });
   }
 
   reportError(message) {
@@ -35,6 +52,7 @@ class ReplyForm extends React.Component {
             </p>
             <textarea
               cols="80"
+              id={this.state.text_id}
               placeholder="It's important to be kind when replying..."
               rows="3"
             />

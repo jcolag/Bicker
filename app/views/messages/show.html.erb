@@ -42,9 +42,10 @@ function submitReply(e, callback, reportError) {
   var linkName = form.attributes.id.value.replace('reply-form-', '');
   var matches = document.getElementsByName(linkName);
   var puncBtn = matches[0];
+  var punctuation = encodeURIComponent(puncBtn.firstChild.innerText);
   var message = encodeURIComponent(textarea.value);
   var request = new XMLHttpRequest();
-  var url = `/api/v1/messages/reply?paraId=${paraId}&offset=${offset}&message=${message}`;
+  var url = `/api/v1/messages/reply?paraId=${paraId}&offset=${offset}&message=${message}&punctuation=${punctuation}`;
 
   request.open(
     'GET',
