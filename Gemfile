@@ -42,6 +42,8 @@ gem 'responders'
 gem 'rubypants'
 
 gem 'rspec'
+gem 'rspec-rails', '>= 4.0.0.beta2'
+gem 'rails-controller-testing'
 
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger

@@ -75,12 +75,17 @@
             <% end %>
             <% if user_signed_in? %>
               <li role="separator" class="divider"></li>
-              <li><%= link_to "Logout", destroy_user_session_path, method: :delete %></li>
+              <li>
+                <%= link_to "Logout",
+                  destroy_user_session_path,
+                  method: :delete
+                %>
+              </li>
             <% end %>
           </ul>
         </li>
         <li class="dropdown avatar">
-          <%= link_to image_tag(avatar),
+          <%= link_to image_tag(avatar.dup),
             edit_user_registration_path,
             :title => current_user.nil? ? '' : current_user.login
           %>
