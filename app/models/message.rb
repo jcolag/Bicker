@@ -11,7 +11,7 @@ class Message < ApplicationRecord
   end
 
   def self.unroll_paragraphs(paragraphs)
-    return [] if paragraphs.empty?
+    return [] if paragraphs.nil? || paragraphs.empty?
 
     paragraphs, lastp = get_next paragraphs, nil
     plist = Array.new(1, lastp)
@@ -119,6 +119,7 @@ class Message < ApplicationRecord
     paragraph
   end
 
+private
   def self.initialize_formatting
     rend = Redcarpet::Render::HTML.new(
       escape_html: true, hard_wrap: true, prettify: true,

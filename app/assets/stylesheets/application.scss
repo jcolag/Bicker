@@ -33,13 +33,14 @@
   font-style: normal;
 }
 
-$bg: #fbeec1;
-$bg-l: #fdf5d9;
-$menu-bg: #daad86;
-$menu-bg-h: #bc986a;
-$text-color: #294c5f;
-$text-color-l: #659dbd;
-$h-color: #8d8741;
+$bg: #cdbea7;
+$h-color: #882426;
+$menu-bg: #c29545;
+$text-color: #323030;
+$bg-l: lighten($bg, 5%);
+$menu-bg-h: lighten($h-color, 5%);
+$text-color-l: lighten($text-color, 20%);
+$h-color-l: lighten($h-color, 20%);
 
 body {
   background-color: $bg;
@@ -89,6 +90,14 @@ table td {
 table td a {
   color: $text-color;
   text-decoration: none;
+}
+
+a {
+  color: $h-color;
+}
+
+a:visited {
+  color: $h-color-l;
 }
 
 #main-container {
