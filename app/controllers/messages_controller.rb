@@ -90,7 +90,7 @@ class MessagesController < ApplicationController
                 user_id: @message.user_id,
                 content: block_par
               }
-              prev_par = Paragraph.new(par)
+              prev_par = Paragraph.create_new(par)
               if prev_par.save
                 Rails.logger.debug('Paragraph was successfully created.')
               else
@@ -118,7 +118,7 @@ class MessagesController < ApplicationController
                 content: p
               }
             end
-            prev_par = Paragraph.new(par)
+            prev_par = Paragraph.create_new(par)
             if prev_par.save
               Rails.logger.debug('Paragraph was successfully created.')
             else

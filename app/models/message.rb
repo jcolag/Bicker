@@ -119,7 +119,6 @@ class Message < ApplicationRecord
     paragraph
   end
 
-private
   def self.initialize_formatting
     rend = Redcarpet::Render::HTML.new(
       escape_html: true, hard_wrap: true, prettify: true,
@@ -154,10 +153,6 @@ class ClientParagraph
 
   def initialize(helpers, paragraph, seen, count)
     user = User.select { |u| u.id == paragraph.user_id }.first
-    paragraph.attributes.keys.each do |k|
-      v = paragraph.attributes[k]
-      #instance_variable_set(k, v) unless v.nil?
-    end
     self.avatar = helpers.avatar 100, user
     self.beenseen = !seen.empty?
     self.content = paragraph.content

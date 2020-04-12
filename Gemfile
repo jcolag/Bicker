@@ -40,6 +40,8 @@ gem 'react-rails'
 gem 'redcarpet'
 gem 'responders'
 gem 'rubypants'
+gem 'kramdown'
+gem 'onebox'
 
 gem 'rspec'
 gem 'rspec-rails', '>= 4.0.0.beta2'
