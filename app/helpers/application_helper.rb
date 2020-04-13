@@ -43,21 +43,12 @@ module ApplicationHelper
   end
 
   def avatar(size = 50, user = current_user)
-    libra = if user.nil?
-              Libravatar.new({
-                               email: 'nobody@nowhere.invalid'.dup,
-                               size: size,
-                               https: true,
-                               default: 'robohash'
-                             })
-            else
-              Libravatar.new({
-                               email: user.email,
-                               size: size,
-                               https: true,
-                               default: 'robohash'
-                             })
-            end
-    libra.to_s
+    email = user.nil? ? 'nobody@nowhere.invalid'.dup : user.email
+    Libravatar.new({
+                     email: email,
+                     size: size,
+                     https: true,
+                     default: 'robohash'
+                   }).to_s
   end
 end

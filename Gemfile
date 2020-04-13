@@ -35,17 +35,16 @@ gem 'devise'
 gem 'rolify'
 
 gem 'bootstrap-sass'
+gem 'kramdown'
 gem 'libravatar'
+gem 'onebox'
+gem 'rails-controller-testing'
 gem 'react-rails'
 gem 'redcarpet'
 gem 'responders'
-gem 'rubypants'
-gem 'kramdown'
-gem 'onebox'
-
 gem 'rspec'
 gem 'rspec-rails', '>= 4.0.0.beta2'
-gem 'rails-controller-testing'
+gem 'rubypants'
 
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger
