@@ -12,3 +12,11 @@
 #     { name: 'Lord of the Rings' }
 #   ])
 #   Character.create(name: 'Luke', movie: movies.first)
+
+User.create!([
+               {
+                 login: 'bicker',
+                 email: 'bicker@bicker.invalid',
+                 password: (0...64).map { rand(256).chr }.join
+               }
+             ])

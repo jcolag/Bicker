@@ -24,13 +24,14 @@ class Paragraph < ApplicationRecord
   end
 
   def self.make_p(paragraph, nextp, content)
+    user = User.select { |u| u.login == 'bicker' }.first
     doc = Kramdown::Document.new(content, html_to_native: true)
     markdown = doc.to_kramdown.gsub(/<[^>]*>/, '')
     {
       message_id: paragraph.message_id,
       parent_id: paragraph.id,
       next_id: nextp ? nextp.id : nil,
-      user_id: paragraph.user_id,
+      user_id: user.id,
       content: markdown
     }
   end
