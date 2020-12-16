@@ -9,8 +9,8 @@ class Ability
     if user.client?
       can :manage, Message, user_id: user.id
       can :manage, Paragraph, user_id: user.id
-    elsif user.admin?
-      can :manage
+    elsif user.has_role? :admin
+      can :manage, :all
     else
       can :read, :all
     end
